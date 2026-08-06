@@ -1599,8 +1599,13 @@
             <li>حلقات جديدة فور طرحها (Simulcast)</li>
             <li>تحميل الحلقات للمشاهدة دون إنترنت</li>
           </ul>
-          <div class="pm-price" id="poPriceValue">800 <small>دج / شهر</small></div>
-          <div class="pm-flexy" id="poFlexyValue">📱 السعر عبر فليكسي Djezzy (+20%): <b>960 دج</b></div>
+          <div class="pc-duration" role="group" aria-label="اختر مدة الاشتراك">
+            <button type="button" class="pc-duration-btn po-duration-btn active" data-price="1200" data-label="شهر">شهر</button>
+            <button type="button" class="pc-duration-btn po-duration-btn" data-price="2200" data-label="3 أشهر">3 أشهر</button>
+            <button type="button" class="pc-duration-btn po-duration-btn" data-price="4200" data-label="12 شهر">12 شهر</button>
+          </div>
+          <div class="pm-price" id="poPriceValue">1200 <small>دج / شهر</small></div>
+          <div class="pm-flexy" id="poFlexyValue">📱 السعر عبر فليكسي Djezzy (+20%): <b>1440 دج</b></div>
         </div>
         <form class="pm-order-form pm-form" id="poForm">
           <h4>أكمل طلبك الآن</h4>
@@ -2378,7 +2383,7 @@
 
   // ---------- This product's order section ----------
   const PRODUCT_NAME = "Crunchyroll Premium";
-  let PRODUCT_PRICE = 800;
+  let PRODUCT_PRICE = 1200;
 
   document.querySelectorAll('.po-duration-btn').forEach(btn => {
     btn.addEventListener('click', () => {
