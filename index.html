@@ -234,6 +234,17 @@
     border-radius:22px;
     box-shadow:0 18px 42px rgba(0,0,0,0.22);
     background:#0757c9;
+    overflow:hidden;
+  }
+  .site-banner-track{
+    display:flex;
+    width:100%;
+    direction:ltr;
+    transition:transform .8s cubic-bezier(.2,.8,.2,1);
+  }
+  .site-banner-slide{
+    flex:0 0 100%;
+    min-width:100%;
   }
   .site-banner img{
     width:100%;
@@ -374,14 +385,20 @@
   .account-area .acc-btn{
     display:inline-flex;align-items:center;gap:6px;
     padding:10px 16px;border-radius:999px;
-    border:1px solid var(--border-strong);
-    background:transparent;color:var(--text);
-    font-weight:700;font-size:13.5px;cursor:pointer;
+    border:1px solid transparent;
+    background:linear-gradient(135deg,var(--accent),#6D3FE0);
+    color:#fff;
+    font-weight:600;font-size:13.5px;cursor:pointer;
     font-family:inherit;
-    transition:background .2s, transform .2s;
+    box-shadow:0 6px 16px rgba(59,130,246,0.28);
+    transition:filter .2s, transform .2s, box-shadow .2s;
     white-space:nowrap;
   }
-  .account-area .acc-btn:hover{background:var(--hover-tint);}
+  .account-area .acc-btn:hover{
+    filter:brightness(1.08);
+    transform:translateY(-1px);
+    box-shadow:0 8px 20px rgba(59,130,246,0.38);
+  }
   .account-area .acc-logged{display:flex;align-items:center;gap:10px;}
   .account-area .acc-name{
     font-weight:700;font-size:13.5px;
@@ -1792,6 +1809,10 @@
     .contact-grid{grid-template-columns:1fr;}
   }
   @media (min-width:761px){
+    .logo-mark{
+      width:34px;
+      height:34px;
+    }
     .hero h1{
       font-size:clamp(24px,4.5vw,56px);
       line-height:1.3;
@@ -1843,7 +1864,6 @@
     .footer-bottom{flex-direction:column;text-align:center;}
     .form-row{grid-template-columns:1fr;gap:14px;}
     .marquee-wrap{width:100%;}
-    .site-banner{width:calc(100% - 48px);}
   }
 
   /* ---------- Small phones ---------- */
@@ -1855,22 +1875,17 @@
     .hero p.lead{font-size:16px;margin-bottom:26px;}
     .hero-actions{gap:12px;margin-bottom:16px;}
     .hero-actions .btn{flex:1 1 auto;justify-content:center;}
-    .logo-name{font-size:13px;}
-    .logo-sub{font-size:10px;}
-    .nav{padding:12px 12px;}
-    .logo{font-size:17px;gap:6px;}
-    .logo-mark{width:30px;height:30px;border-radius:50%;}
-    .logo-text{max-width:96px;overflow:hidden;}
-    .logo-name,.logo-sub{overflow:hidden;text-overflow:ellipsis;}
+    .logo-name{font-size:14px;}
+    .logo-sub{font-size:10.5px;}
+    .nav{padding:12px 16px;}
+    .logo{font-size:17px;gap:8px;}
+    .logo-mark{width:34px;height:34px;border-radius:50%;}
     .logo span.sub{font-size:11px;}
-    .nav-cta{gap:6px;}
-    .theme-toggle{width:34px;height:34px;font-size:14px;}
-    .cart-toggle{width:34px;height:34px;font-size:15px;}
-    .account-area .acc-btn{padding:7px 9px;font-size:0;gap:0;}
-    .account-area .acc-btn::before{content:"👤";font-size:16px;}
+    .nav-cta{gap:8px;}
+    .theme-toggle{width:36px;height:36px;font-size:15px;}
+    .account-area .acc-btn{padding:8px 10px;font-size:12.5px;gap:0;}
     .account-area .acc-logged .acc-name{display:none;}
-    .nav-cta .btn-primary{padding:8px 11px;font-size:12px;}
-    .site-banner{width:calc(100% - 32px);margin:16px auto 14px;border-radius:16px;}
+    .nav-cta .btn-primary{padding:10px 14px;font-size:13px;}
     .bento{grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(4,minmax(70px,1fr));height:420px;}
     .t-chatgpt{grid-column:1/3;grid-row:1/2;}
     .t-gemini{grid-column:1/2;grid-row:2/4;}
@@ -1894,18 +1909,16 @@
 
   /* ---------- Extra-narrow phones (guard against nav overflow) ---------- */
   @media (max-width:380px){
-    .nav{padding:10px 10px;}
-    .nav-cta{gap:5px;}
-    .logo{gap:5px;font-size:15px;}
-    .logo-mark{width:26px;height:26px;border-radius:50%;}
-    .logo-text{max-width:76px;}
-    .logo-name{font-size:12px;}
-    .logo-sub{font-size:9px;}
-    .theme-toggle{width:30px;height:30px;font-size:13px;}
-    .cart-toggle{width:30px;height:30px;font-size:14px;}
-    .menu-toggle{font-size:19px;}
-    .account-area .acc-btn{padding:6px 7px;}
-    .nav-cta .btn-primary{padding:7px 9px;font-size:11.5px;}
+    .nav{padding:10px 12px;}
+    .nav-cta{gap:6px;}
+    .logo{gap:6px;font-size:15px;}
+    .logo-mark{width:30px;height:30px;border-radius:50%;}
+    .logo-name{font-size:13px;}
+    .logo-sub{font-size:9.5px;}
+    .theme-toggle{width:32px;height:32px;font-size:14px;}
+    .menu-toggle{font-size:20px;}
+    .account-area .acc-btn{padding:7px 8px;font-size:11.5px;}
+    .nav-cta .btn-primary{padding:9px 12px;font-size:12.5px;}
   }
 
   /* ===== Subscription-sale disclosure notice button ===== */
@@ -1995,15 +2008,13 @@
         <span class="icon-moon">🌙</span>
         <span class="icon-sun">☀️</span>
       </button>
-      <button class="menu-toggle" id="menuToggle" aria-label="فتح القائمة">☰</button>
       <button class="cart-toggle" id="cartToggleBtn" aria-label="السلة" data-dash-open="cart">
         🛒<span class="cart-badge" id="cartBadge">0</span>
       </button>
+      <button class="menu-toggle" id="menuToggle" aria-label="فتح القائمة">☰</button>
       <div class="account-area" id="accountArea">
-        <button class="acc-btn" id="authOpenBtn">👤 تسجيل الدخول</button>
+        <button class="acc-btn" id="authOpenBtn">تسجيل الدخول</button>
       </div>
-      <a href="#contact" class="btn btn-ghost">تواصل معنا</a>
-      <a href="#products" class="btn btn-primary">اطلب الآن</a>
     </div>
   </nav>
 </header>
@@ -2016,7 +2027,17 @@
     <div class="blob blob-2"></div>
     <div class="blob blob-3"></div>
     <div class="site-banner" aria-label="إعلان البرامج والتطبيقات والخدمات الرقمية">
-      <img src="image1.png" alt="برامج وتطبيقات وخدمات رقمية تلبي جميع احتياجاتك">
+      <div class="site-banner-track" id="siteBannerTrack">
+        <div class="site-banner-slide">
+          <img src="image1.png" alt="برامج وتطبيقات وخدمات رقمية تلبي جميع احتياجاتك">
+        </div>
+        <div class="site-banner-slide">
+          <img src="image2.png" alt="أدوات الذكاء الاصطناعي بأفضل الأسعار">
+        </div>
+        <div class="site-banner-slide" aria-hidden="true">
+          <img src="image1.png" alt="">
+        </div>
+      </div>
     </div>
     <div class="marquee-wrap" aria-label="الاشتراكات والخدمات المتاحة">
       <div class="marquee-track">
@@ -3443,7 +3464,7 @@
     document.getElementById('dashOpenBtn').addEventListener('click', () => openDashboard('orders'));
   }
   function renderLoggedOut(){
-    accountArea.innerHTML = `<button class="acc-btn" id="authOpenBtn">👤 تسجيل الدخول</button>`;
+    accountArea.innerHTML = `<button class="acc-btn" id="authOpenBtn">تسجيل الدخول</button>`;
     document.getElementById('authOpenBtn').addEventListener('click', () => {
       clearAuthError();
       openPrivacyModal();
@@ -3784,6 +3805,44 @@
         history.pushState(null, '', id);
       });
     });
+  })();
+
+  // ---------- Hero banner carousel ----------
+  (function initBannerCarousel(){
+    const track = document.getElementById('siteBannerTrack');
+    if (!track) return;
+    const slides = track.querySelectorAll('.site-banner-slide');
+    if (slides.length < 2) return;
+
+    const banner = track.closest('.site-banner');
+    let current = 0;
+    let timer;
+
+    const showNextSlide = () => {
+      current += 1;
+      track.style.transform = `translateX(-${current * 100}%)`;
+
+      if (current === slides.length - 1) {
+        setTimeout(() => {
+          track.style.transition = 'none';
+          current = 0;
+          track.style.transform = 'translateX(0)';
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              track.style.transition = '';
+            });
+          });
+        }, 800);
+      }
+    };
+    const startCarousel = () => {
+      clearInterval(timer);
+      timer = setInterval(showNextSlide, 4000);
+    };
+
+    startCarousel();
+    banner.addEventListener('mouseenter', () => clearInterval(timer));
+    banner.addEventListener('mouseleave', startCarousel);
   })();
 </script>
 
