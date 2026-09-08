@@ -3,7 +3,7 @@
   zoom:1;
   cursor:pointer;
   min-width:0;
-  flex:1 1 auto;
+  flex:0 0 auto;
 }
 .logo-mark{border-radius:50%;}
 .logo > div:last-child{
@@ -36,7 +36,7 @@
   border-radius:10px;
 }
 .nav{position:relative;direction:ltr;}
-.logo{min-width:0;flex:1 1 auto;}
+.logo{min-width:0;flex:0 0 auto;}
 .nav-cta{flex-shrink:0;margin-left:auto;}
 .account-area .acc-btn{
   border:1px solid transparent;
