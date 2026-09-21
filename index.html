@@ -1966,7 +1966,11 @@
 
   .account-area .acc-btn{
     font-size:0 !important;
-    gap:7px;
+    gap:0;
+    padding:9px;
+    width:38px;height:38px;
+    justify-content:center;
+    border-radius:999px;
   }
   .account-area .acc-btn::before{
     content:"";
@@ -1976,15 +1980,14 @@
     background:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSI3IiByPSIzLjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0iTTQuNSAyMWMuNy00LjEgMy4xLTYuMiA3LjUtNi4yczYuOCAyLjEgNy41IDYuMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg==") center/contain no-repeat;
   }
   .account-area .acc-btn::after{
-    content:"تسجيل الدخول";
-    font-family:inherit;
-    font-size:13.5px;
-    line-height:1;
+    display:none;
+    content:"";
   }
   body.light .account-area .acc-btn::before{
     background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSI3IiByPSIzLjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0iTTQuNSAyMWMuNy00LjEgMy4xLTYuMiA3LjUtNi4yczYuOCAyLjEgNy41IDYuMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg==") ;
   }
   @media (max-width:480px){
+
     .menu-toggle,.theme-toggle{
       background-size:17px 17px;
     }
@@ -2934,15 +2937,39 @@
     .hv-item small{font-size:11px;}
   }
 
-  /* ---------- Header: بدون اسم المتجر + أصغر على الشاشات الكبيرة فقط ---------- */
+  /* ---------- Header: بدون اسم المتجر + حجم متوازن على الشاشات الكبيرة ---------- */
   .logo > div:last-child{display:none !important;}
   .logo{flex:0 0 auto;gap:0;}
   @media (min-width:761px){
-    .nav{padding-top:10px;padding-bottom:10px;}
-    .logo-mark{width:32px;height:32px;flex:0 0 32px;}
-    .theme-toggle,.menu-toggle,.cart-toggle{width:36px;height:36px;border-radius:11px;}
-    .account-area .acc-btn{padding:8px 15px;}
-    .nav-cta .btn{padding:9px 20px;font-size:14px;}
+    .nav{padding-top:13px;padding-bottom:13px;}
+    .logo-mark{width:38px;height:38px;flex:0 0 38px;}
+    .nav-cta{gap:12px;}
+    .theme-toggle,.menu-toggle,.cart-toggle{width:38px;height:38px;border-radius:11px;}
+    .theme-toggle .icon-moon,.theme-toggle .icon-sun{width:19px;height:19px;}
+    .menu-toggle{background-size:19px 19px;}
+    .cart-toggle{font-size:17px;}
+    .cart-badge{min-width:17px;height:17px;font-size:10px;line-height:17px;top:-6px;left:-6px;}
+    .account-area .acc-btn{padding:0;width:40px;height:40px;gap:0;border-radius:999px;box-shadow:0 4px 12px rgba(59,130,246,0.24);}
+    .account-area .acc-btn::before{width:18px;height:18px;flex-basis:18px;}
+    .nav-cta .btn{padding:9px 19px;font-size:13.5px;gap:7px;}
+  }
+
+  /* أزرار الخيارات والإضاءة وتسجيل الدخول بدون إطار */
+  .theme-toggle,
+  .menu-toggle,
+  .account-area .acc-btn{
+    border:none !important;
+    box-shadow:none !important;
+  }
+  .theme-toggle,
+  .account-area .acc-btn{
+    background:transparent !important;
+  }
+  .theme-toggle:hover,
+  .menu-toggle:hover,
+  .account-area .acc-btn:hover{
+    border-color:transparent !important;
+    box-shadow:none !important;
   }
 
 </style>
@@ -3582,60 +3609,6 @@
     </div>
   </section>
 
-  <!-- ================= ABOUT (FULL WIDTH) ================= -->
-  <section id="about" class="about-section">
-    <div class="about-inner">
-      <div class="section-head reveal">
-        <h2>عن Petya Digital Product</h2>
-        <p class="about-lead">
-          منذ انطلاقنا، حرصنا أن نكون الوجهة الأولى للمشتركين الجزائريين والعرب الباحثين عن اشتراكات رقمية أصلية بأسعار عادلة. نتعامل مباشرة مع مزوّدين موثوقين لكل خدمة، ما يضمن لك حسابات حقيقية وفعّالة 100%، بعيداً عن الحسابات المشتركة أو المفعّلة بطرق غير آمنة. فريقنا متواجد يومياً لمتابعة الطلبات والرد على استفساراتك عبر تيليجرام، بدءاً من لحظة الطلب وحتى بعد التفعيل بأسابيع، لضمان تجربة اشتراك مريحة من أول يوم.
-        </p>
-      </div>
-      <div class="about-features">
-        <div class="about-feature reveal">
-          <div class="af-icon">🔐</div>
-          <h4>حسابات أصلية 100%</h4>
-          <p>كل اشتراك يُفعَّل بطريقة رسمية على حسابك الشخصي، بدون مشاركة أو حسابات وهمية.</p>
-        </div>
-        <div class="about-feature reveal">
-          <div class="af-icon">🌍</div>
-          <h4>+9 خدمات في مكان واحد</h4>
-          <p>ذكاء اصطناعي، تصميم، مشاهدة، موسيقى، وتواصل اجتماعي — كل ما تحتاجه بدون تنقل بين مواقع متعددة.</p>
-        </div>
-        <div class="about-feature reveal">
-          <div class="af-icon">💵</div>
-          <h4>أسعار مدروسة</h4>
-          <p>أسعار تنافسية بالدينار الجزائري، مع خيارات مدد مختلفة تناسب ميزانيتك.</p>
-        </div>
-        <div class="about-feature reveal">
-          <div class="af-icon">🛡️</div>
-          <h4>ضمان استبدال فعلي</h4>
-          <p>أي عطل أو مشكلة في الاشتراك خلال فترة الضمان نستبدله لك فوراً وبدون تعقيد.</p>
-        </div>
-        <div class="about-feature reveal">
-          <div class="af-icon">⚡</div>
-          <h4>تسليم سريع</h4>
-          <p>معظم الطلبات تُفعَّل خلال 15 دقيقة من تأكيد الدفع، دون انتظار طويل.</p>
-        </div>
-        <div class="about-feature reveal">
-          <div class="af-icon">💬</div>
-          <h4>تواصل مباشر ومستمر</h4>
-          <p>فريق دعم حقيقي على تيليجرام يرافقك من الطلب حتى ما بعد التفعيل.</p>
-        </div>
-        <div class="about-feature reveal">
-          <div class="af-icon">🔄</div>
-          <h4>تجديد سهل</h4>
-          <p>عند انتهاء مدة اشتراكك، نذكّرك وتجدّد بضغطة واحدة دون فقدان بياناتك.</p>
-        </div>
-        <div class="about-feature reveal">
-          <div class="af-icon">🇩🇿</div>
-          <h4>دعم محلي بالدارجة</h4>
-          <p>فريقنا يتحدث لغتك ويفهم احتياجاتك، ويقدّم طرق دفع محلية مناسبة.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ================= PRODUCT DETAILS MODAL ================= -->
   <div class="product-overlay" id="productOverlay" role="dialog" aria-modal="true" aria-labelledby="pmTitle">
     <div class="product-modal">
@@ -3805,10 +3778,6 @@
         <p>إجابات على أكثر الأسئلة التي يطرحها عملاؤنا.</p>
       </div>
       <div class="faq-list reveal">
-        <div class="faq-item">
-          <button class="faq-q">هل الاشتراكات أصلية ومضمونة؟<span class="plus">+</span></button>
-          <div class="faq-a"><p>نعم، جميع الاشتراكات التي نوفرها أصلية ومفعّلة مباشرة، مع ضمان استبدال في حال حدوث أي عطل خلال فترة الضمان المحددة لكل منتج.</p></div>
-        </div>
         <div class="faq-item">
           <button class="faq-q">كم يستغرق تسليم الاشتراك بعد الطلب؟<span class="plus">+</span></button>
           <div class="faq-a"><p>في أغلب الحالات يتم التسليم خلال 15 دقيقة إلى ساعة كحد أقصى، حسب نوع الخدمة وساعة الطلب.</p></div>
