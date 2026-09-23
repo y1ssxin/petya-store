@@ -1738,7 +1738,7 @@
           </div>
           <button type="button" id="poCartBtn" class="pm-cart-btn">🛒 أضف إلى السلة</button>
           <div class="pm-form-actions">
-            <a href="https://pay.ocdz.link/pay/OCPL-3FD2EE-8880" target="_blank" rel="noopener" id="poPayBtn" class="btn btn-primary" style="width:100%;justify-content:center;">ادفع الان</a>
+            <a href="https://pay.ocdz.link/pay/OCPL-3FD2EE-8880" id="poPayBtn" class="btn btn-primary" style="width:100%;justify-content:center;">ادفع الان</a>
           </div>
         </div>
       </div>
@@ -2517,6 +2517,14 @@
       }
     });
   });
+
+  const poPayBtn = document.getElementById('poPayBtn');
+  if (poPayBtn){
+    poPayBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location.href = 'https://pay.ocdz.link/pay/OCPL-3FD2EE-8880';
+    });
+  }
 
   const poCartBtn = document.getElementById('poCartBtn');
 
