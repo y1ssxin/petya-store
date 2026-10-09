@@ -576,9 +576,17 @@
       </div>`;
 
     db.collection('orders')
-      .where('accountEmail', '==', auth.currentUser.email)
-      .orderBy('createdAt', 'desc')
+      .where('uid', '==', auth.currentUser.uid)
       .get()
+      .then((snap) => {
+        // ترتيب الطلبات من الأحدث إلى الأقدم داخل المتصفح (يتجنب الحاجة لفهرس مركّب)
+        const docs = snap.docs.slice().sort((a, b) => {
+          const ta = a.data().createdAt ? a.data().createdAt.toMillis() : 0;
+          const tb = b.data().createdAt ? b.data().createdAt.toMillis() : 0;
+          return tb - ta;
+        });
+        return { empty: snap.empty, size: snap.size, docs };
+      })
       .then((snapshot) => {
         if (snapshot.empty){
           content.innerHTML = `

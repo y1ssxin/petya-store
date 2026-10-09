@@ -872,15 +872,12 @@
   .pc-duration{
     display:flex;
     gap:8px;
-    margin:auto 0 0;
-    flex-wrap:nowrap;
+    margin:14px 0 4px;
+    flex-wrap:wrap;
   }
-  .pc-duration + .pc-footer{margin-top:0;}
   .pc-duration-btn{
-    flex:1 1 0;
-    min-width:0;
-    min-height:38px;
-    white-space:nowrap;
+    flex:1;
+    min-width:70px;
     padding:8px 6px;
     border-radius:10px;
     border:1px solid var(--border);
@@ -2985,19 +2982,6 @@
       text-align:right !important;
     }
   }
-
-  /* ---------- الهاتف: العناصر الثلاثة على اليمين وبمسافات متساوية ---------- */
-  @media (max-width:760px){
-    .hero-copy{align-items:stretch !important;text-align:right !important;}
-    .hero .eyebrow{align-self:flex-start !important;margin:0 0 16px !important;}
-    .hero h1{margin:0 0 16px !important;text-align:right !important;}
-    .hero p.lead{
-      margin:0 0 26px !important;
-      max-width:100% !important;
-      text-align:right !important;
-      text-wrap:pretty;
-    }
-  }
 </style>
 </head>
 <body id="top">
@@ -3368,7 +3352,7 @@
           </div>
         </div>
 
-        <div class="product-card p-snapchat reveal" data-category="social" data-price="2900">
+        <div class="product-card p-snapchat reveal" data-category="social" data-price="2500">
           <div class="pc-top">
             <div class="pc-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 19V11a6 6 0 0 1 12 0v8l-2.2-1.6L14 19l-2-1.6L10 19l-1.8-1.6Z"/><circle cx="9.5" cy="11" r=".9" fill="currentColor" stroke="none"/><circle cx="14.5" cy="11" r=".9" fill="currentColor" stroke="none"/></svg></div>
             <span class="pc-price-pill">حصري</span>
@@ -3381,12 +3365,12 @@
             <li>تخصيص متقدم للتطبيق</li>
           </ul>
           <div class="pc-duration" role="group" aria-label="اختر مدة الاشتراك">
-            <button type="button" class="pc-duration-btn active" data-price="2900" data-label="3 أشهر">3 أشهر</button>
-            <button type="button" class="pc-duration-btn" data-price="5900" data-label="6 أشهر">6 أشهر</button>
-            <button type="button" class="pc-duration-btn" data-price="8500" data-label="12 شهر">12 شهر</button>
+            <button type="button" class="pc-duration-btn active" data-price="2500" data-label="3 أشهر">3 أشهر</button>
+            <button type="button" class="pc-duration-btn" data-price="3800" data-label="6 أشهر">6 أشهر</button>
+            <button type="button" class="pc-duration-btn" data-price="6200" data-label="12 شهر">12 شهر</button>
           </div>
           <div class="pc-footer">
-            <div class="price">2900 <small>دج / 3 أشهر</small></div>
+            <div class="price">2500 <small>دج / 3 أشهر</small></div>
             <a href="snapchat.html" class="pc-order">اطلب الآن ←</a>
           </div>
         </div>
@@ -3898,7 +3882,6 @@
         <a href="starzplay.html">STARZPLAY</a>
         <a href="kaspersky.html">Kaspersky</a>
         <a href="office2024.html">Microsoft 365</a>
-        <a href="xbox.html">Xbox Game Pass Ultimate Home</a>
         <a href="xbox-pc.html">Xbox Game Pass Ultimate PC</a>
       </div>
       <div>
@@ -4222,6 +4205,7 @@
       product: currentProductName,
       message: message || null,
       accountEmail: (auth.currentUser && auth.currentUser.email) || null,
+      uid: (auth.currentUser && auth.currentUser.uid) || null,
       status: 'new',
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     };
