@@ -4294,8 +4294,8 @@
   function renderLoggedOut(){
     accountArea.innerHTML = `<button class="acc-btn" id="authOpenBtn">👤 تسجيل الدخول</button>`;
     document.getElementById('authOpenBtn').addEventListener('click', () => {
-      clearAuthError();
-      openPrivacyModal();
+      // Login (phone number or Google) lives on the account page
+      window.location.href = 'account.html';
     });
   }
 
@@ -4303,7 +4303,7 @@
   // every login/logout (also works across tabs).
   auth.onAuthStateChanged((user) => {
     if (user){
-      currentUserName = user.displayName || user.email;
+      currentUserName = user.displayName || user.email || user.phoneNumber || 'حسابي';
       renderLoggedIn(currentUserName);
     } else {
       currentUserName = null;

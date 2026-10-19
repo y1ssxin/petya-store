@@ -1041,12 +1041,8 @@ body.light .stat-ico.is-done{color:#047857;}
 .panel-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px;}
 .panel-head h2{font-size:22px;}
 .panel-head .sub{display:block;margin-top:4px;font-size:13px;color:var(--text-faint);min-height:1em;}
-.chips{display:flex;gap:8px;flex-wrap:wrap;}
-.chip{padding:8px 16px;border-radius:999px;border:1px solid var(--border-strong);background:transparent;color:var(--text-dim);font-size:13px;font-weight:700;transition:background .2s,border-color .2s,color .2s;}
-.chip:hover{background:var(--hover-tint);}
-.chip.active{background:var(--accent-soft);border-color:var(--accent);color:var(--text);}
 .order-list{display:grid;gap:12px;}
-.order-card{display:flex;align-items:center;gap:16px;padding:18px 20px;background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius-md);transition:border-color .25s,transform .25s,box-shadow .25s;}
+.order-card{display:flex;flex-wrap:wrap;align-items:center;gap:16px;padding:18px 20px;background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius-md);transition:border-color .25s,transform .25s,box-shadow .25s;}
 .order-card:hover{border-color:var(--border-strong);transform:translateY(-2px);box-shadow:var(--shadow-card);}
 .order-icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;flex-shrink:0;background:rgba(251,191,36,.14);color:#FBBF24;}
 .order-card.is-done .order-icon{background:rgba(52,211,153,.14);color:#34D399;}
@@ -1109,11 +1105,83 @@ body.light .auth-error{color:#B91C1C;}
   .stat-card{flex-direction:column;align-items:flex-start;gap:10px;padding:14px;}
   .stat-card b{font-size:22px;}
   .stat-card .l{font-size:12px;}
-  .order-card{flex-wrap:wrap;padding:16px;}
+  .order-card{padding:16px;}
   .order-main{flex:1 1 calc(100% - 64px);}
   .order-side{flex-direction:row;align-items:center;justify-content:space-between;width:100%;}
   .login-card{padding:34px 20px;}
   footer .footer-grid{grid-template-columns:1fr 1fr;}
+}
+
+/* ---------- phone / code / profile forms ---------- */
+.step{display:flex;flex-direction:column;gap:10px;width:100%;max-width:360px;text-align:right;}
+.f-label{font-size:13.5px;font-weight:700;color:var(--text);}
+.f-label .req{color:#F87171;}
+.f-label .opt{color:var(--text-faint);font-weight:500;}
+.f-hint{margin:-4px 0 4px;font-size:12.5px;color:var(--text-faint);}
+.phone-field,.text-input,.otp-input{width:100%;border-radius:14px;border:1px solid var(--border-strong);background:var(--bg-elev);color:var(--text);transition:border-color .2s,box-shadow .2s;}
+.phone-field{display:flex;direction:ltr;overflow:hidden;}
+.phone-field:focus-within,.text-input:focus,.otp-input:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft);outline:none;}
+.phone-prefix{order:-1;display:flex;align-items:center;gap:6px;padding:0 14px;font-weight:700;font-size:15px;white-space:nowrap;background:var(--hover-tint-strong);border-inline-end:1px solid var(--border);}
+.phone-field input{flex:1;min-width:0;padding:14px;border:0;background:transparent;color:var(--text);font-size:17px;letter-spacing:.04em;outline:none;}
+.text-input{padding:14px 16px;font-size:15.5px;}
+.otp-input{padding:14px;text-align:center;font-size:26px;font-weight:700;letter-spacing:.5em;text-indent:.5em;}
+.otp-to{font-size:14px;color:var(--text-dim);text-align:center;}
+.otp-to b{color:var(--text);}
+.btn.wide{width:100%;justify-content:center;}
+.btn[disabled]{opacity:.65;cursor:progress;transform:none;}
+.or{display:flex;align-items:center;gap:12px;margin:6px 0 2px;color:var(--text-faint);font-size:13px;}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--border);}
+.step .google-btn{max-width:none;margin-top:0;}
+.otp-links{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.link-btn{background:none;border:0;padding:6px 2px;color:var(--accent-2);font-weight:700;font-size:13.5px;cursor:pointer;}
+body.light .link-btn{color:var(--accent);}
+.link-btn:disabled{color:var(--text-faint);cursor:default;}
+.link-btn.center{align-self:center;}
+#recaptcha-container{min-height:0;}
+.privacy-box{width:100%;max-width:360px;margin-top:14px;text-align:right;font-size:12.5px;color:var(--text-faint);}
+.privacy-box summary{cursor:pointer;list-style:none;text-align:center;line-height:1.7;}
+.privacy-box summary::-webkit-details-marker{display:none;}
+.privacy-box[open] summary{margin-bottom:10px;}
+.privacy-box ul{margin:0;padding:12px 28px 12px 14px;border-radius:12px;background:var(--bg-elev);border:1px solid var(--border);display:grid;gap:8px;line-height:1.8;color:var(--text-dim);}
+.side-phone{margin-top:4px;font-size:14px;font-weight:600;color:var(--text-dim);text-align:right;}
+.side-email:empty{display:none;}
+
+/* ---------- order sections (tabs) ---------- */
+.tabs{display:flex;gap:6px;padding:6px;margin-bottom:18px;width:fit-content;max-width:100%;border-radius:999px;background:var(--bg-elev);border:1px solid var(--border);overflow-x:auto;}
+.tab{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;border:0;background:transparent;color:var(--text-dim);font-weight:700;font-size:14px;white-space:nowrap;cursor:pointer;transition:background .2s,color .2s;}
+.tab:hover{background:var(--hover-tint-strong);color:var(--text);}
+.tab.active{background:linear-gradient(135deg,var(--accent),#6D3FE0);color:#fff;box-shadow:0 8px 20px rgba(59,130,246,.28);}
+.tab .n{min-width:22px;height:22px;padding:0 7px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;background:var(--hover-tint-strong);font-size:12px;font-weight:800;}
+.tab.active .n{background:rgba(255,255,255,.24);}
+.order-status.status-cancelled{background:rgba(148,163,184,.16);color:#94A3B8;}
+body.light .order-status.status-cancelled{color:#475569;background:rgba(100,116,139,.14);}
+.order-card.is-cancelled .order-icon{background:rgba(148,163,184,.14);color:#94A3B8;}
+.order-card.is-cancelled .order-name{text-decoration:line-through;opacity:.7;}
+.order-actions{flex:1 1 100%;display:flex;gap:10px;flex-wrap:wrap;padding-top:14px;border-top:1px dashed var(--border);}
+.o-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;border-radius:12px;font-size:13.5px;font-weight:700;border:1px solid transparent;cursor:pointer;transition:background .2s,transform .2s,box-shadow .2s;}
+.o-btn svg{width:16px;height:16px;}
+.o-btn-ok{background:linear-gradient(135deg,#10B981,#059669);color:#fff;box-shadow:0 8px 18px rgba(16,185,129,.25);}
+.o-btn-ok:hover{transform:translateY(-1px);}
+.o-btn-cancel{background:transparent;color:#F87171;border-color:rgba(248,113,113,.4);}
+.o-btn-cancel:hover{background:rgba(248,113,113,.1);}
+body.light .o-btn-cancel{color:#DC2626;border-color:rgba(220,38,38,.35);}
+.o-btn:disabled{opacity:.6;cursor:progress;transform:none;}
+
+/* ---------- confirm dialog + toast ---------- */
+.dlg-overlay{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(4,9,20,.62);backdrop-filter:blur(6px);}
+.dlg{width:100%;max-width:420px;padding:28px;border-radius:var(--radius-lg);background:var(--bg-elev);border:1px solid var(--border-strong);box-shadow:0 30px 80px rgba(0,0,0,.45);text-align:center;}
+.dlg h3{font-size:19px;margin-bottom:8px;}
+.dlg p{color:var(--text-dim);font-size:14.5px;line-height:1.9;margin-bottom:20px;}
+.dlg-actions{display:flex;gap:10px;}
+.dlg-actions .btn{flex:1;justify-content:center;}
+.dlg-actions .btn-danger{background:linear-gradient(135deg,#EF4444,#DC2626);color:#fff;border:0;}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:320;max-width:calc(100vw - 32px);padding:13px 22px;border-radius:14px;background:var(--bg-elev);border:1px solid var(--border-strong);box-shadow:0 18px 40px rgba(0,0,0,.4);font-weight:700;font-size:14px;}
+.toast.err{border-color:rgba(248,113,113,.5);color:#F87171;}
+body.light .toast.err{color:#B91C1C;}
+@media (max-width:640px){
+  .tabs{width:100%;}
+  .tab{flex:1;justify-content:center;padding:10px 12px;font-size:13px;}
+  .o-btn{flex:1;}
 }
 
 </style>
@@ -1160,7 +1228,7 @@ body.light .auth-error{color:#B91C1C;}
   <section class="acc-hero wrap">
     <span class="eyebrow">منطقة العملاء</span>
     <h1>إدارة <span class="grad">حسابك وطلباتك</span></h1>
-    <p>تابع حالة طلباتك وسجلّ مشترياتك، وتواصل معنا بسهولة، كل ذلك في مكان واحد.</p>
+    <p id="heroSub">تابع حالة طلباتك وسجلّ مشترياتك، وتواصل معنا بسهولة، كل ذلك في مكان واحد.</p>
   </section>
 
   <div class="wrap acc-body">
@@ -1176,28 +1244,78 @@ body.light .auth-error{color:#B91C1C;}
       </div>
     </div>
 
-    <!-- ========== State: signed out ========== -->
+    <!-- ========== State: signed out (phone → code) ========== -->
     <section class="login-card card" id="stateOut" hidden>
+      <div class="state-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>
+      </div>
+      <h2 id="loginTitle">سجّل الدخول أو أنشئ حسابًا</h2>
+      <p class="login-sub" id="loginSub">أدخل رقم هاتفك الجزائري وسنرسل لك رمز تحقق عبر رسالة نصية.</p>
+      <p class="auth-error" id="authError" role="alert"></p>
+
+      <!-- step 1: phone number -->
+      <form class="step" id="phoneForm" novalidate>
+        <label class="f-label" for="phoneInput">رقم الهاتف</label>
+        <div class="phone-field">
+          <input id="phoneInput" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="0555 12 34 56" dir="ltr" maxlength="16">
+          <span class="phone-prefix" dir="ltr">🇩🇿 +213</span>
+        </div>
+        <p class="f-hint">أرقام الجزائر فقط (05 / 06 / 07).</p>
+        <button type="submit" class="btn btn-primary wide" id="sendCodeBtn">إرسال رمز التحقق</button>
+        <div class="or"><span>أو</span></div>
+        <button type="button" id="googleSignInBtn" class="google-btn">
+          <svg width="20" height="20" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/>
+            <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z"/>
+            <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
+            <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+          </svg>
+          الدخول بحساب Google
+        </button>
+      </form>
+
+      <!-- step 2: verification code -->
+      <form class="step" id="otpForm" hidden novalidate>
+        <p class="otp-to">أرسلنا رمز التحقق إلى <b dir="ltr" id="otpPhoneLabel"></b></p>
+        <label class="f-label" for="otpInput">رمز التحقق</label>
+        <input id="otpInput" class="otp-input" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="······" dir="ltr">
+        <button type="submit" class="btn btn-primary wide" id="verifyBtn">تأكيد الرمز</button>
+        <div class="otp-links">
+          <button type="button" class="link-btn" id="changePhoneBtn">تغيير الرقم</button>
+          <button type="button" class="link-btn" id="resendBtn" disabled>إعادة الإرسال بعد <span id="resendTimer">60</span> ث</button>
+        </div>
+      </form>
+
+      <div id="recaptcha-container"></div>
+
+      <details class="privacy-box">
+        <summary>بالمتابعة فإنك توافق على سياسة الخصوصية والشروط والأحكام</summary>
+        <ul>
+          <li>نجمع بيانات حسابك الأساسية: رقم الهاتف واسم المستخدم، والبريد الإلكتروني إن أضفته، أو بيانات حساب Google إن اخترت الدخول به.</li>
+          <li>نستخدم بياناتك لتفعيل اشتراكاتك وتقديم الدعم والتواصل معك بخصوص طلباتك.</li>
+          <li>لا نقوم ببيع أو مشاركة بياناتك مع أي طرف ثالث لأغراض تسويقية.</li>
+          <li>تُحفظ بياناتك بشكل آمن، ويمكنك طلب حذف حسابك وبياناتك في أي وقت.</li>
+        </ul>
+      </details>
+    </section>
+
+    <!-- ========== State: new account (after the phone is verified) ========== -->
+    <section class="login-card card" id="stateProfile" hidden>
       <div class="state-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </div>
-      <h2>سجّل الدخول إلى حسابك</h2>
-      <p class="login-sub">ادخل بحساب Google بضغطة واحدة لعرض طلباتك وحالتها.</p>
-      <ul class="login-points">
-        <li><span>🔒</span> دخول آمن عبر حساب Google</li>
-        <li><span>🧾</span> سجلّ كامل بطلباتك السابقة</li>
-        <li><span>⚡</span> متابعة حالة كل طلب</li>
-      </ul>
-      <p class="auth-error" id="authError" role="alert"></p>
-      <button type="button" id="googleSignInBtn" class="google-btn">
-        <svg width="20" height="20" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/>
-          <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z"/>
-          <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
-          <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
-        </svg>
-        الدخول بحساب Google
-      </button>
+      <h2>أكمل إنشاء حسابك</h2>
+      <p class="login-sub">تم تأكيد رقمك <b dir="ltr" id="profilePhone"></b>. اختر اسم مستخدم لإتمام التسجيل.</p>
+      <p class="auth-error" id="profileError" role="alert"></p>
+      <form class="step" id="profileForm" novalidate>
+        <label class="f-label" for="usernameInput">اسم المستخدم <span class="req">*</span></label>
+        <input id="usernameInput" class="text-input" type="text" autocomplete="nickname" maxlength="30" placeholder="مثال: أمين_بن_علي">
+        <p class="f-hint">من 3 إلى 30 حرفًا (حروف وأرقام و _ . - ومسافات).</p>
+        <label class="f-label" for="emailInput">البريد الإلكتروني <span class="opt">(اختياري)</span></label>
+        <input id="emailInput" class="text-input" type="email" autocomplete="email" dir="ltr" maxlength="120" placeholder="name@example.com">
+        <button type="submit" class="btn btn-primary wide" id="profileSaveBtn">إنشاء الحساب</button>
+        <button type="button" class="link-btn center" id="profileLogoutBtn">استخدام رقم آخر</button>
+      </form>
     </section>
 
     <!-- ========== State: signed in ========== -->
@@ -1209,6 +1327,7 @@ body.light .auth-error{color:#B91C1C;}
         <div class="side-body">
           <div class="side-avatar"><div class="side-avatar-inner" id="sideAvatar">؟</div></div>
           <div class="side-name" id="sideName"></div>
+          <div class="side-phone" id="sidePhone" dir="ltr" hidden></div>
           <div class="side-email" id="sideEmail"></div>
           <div class="side-since" id="sideSince" hidden></div>
         </div>
@@ -1255,21 +1374,21 @@ body.light .auth-error{color:#B91C1C;}
           </div>
           <div class="stat-card card">
             <div class="stat-ico is-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.8"/></svg></div>
-            <div><b id="statDone">—</b><span class="l">مكتملة</span></div>
+            <div><b id="statDone">—</b><span class="l">تم الاستلام</span></div>
           </div>
         </div>
 
         <section class="orders-panel" id="ordersPanel" aria-labelledby="ordersTitle">
           <div class="panel-head">
             <div>
-              <h2 id="ordersTitle">سجل الطلبات</h2>
+              <h2 id="ordersTitle">طلباتي</h2>
               <span class="sub" id="ordersSub"></span>
             </div>
-            <div class="chips" id="chips" hidden>
-              <button type="button" class="chip active" data-filter="all" aria-pressed="true">الكل</button>
-              <button type="button" class="chip" data-filter="pending" aria-pressed="false">قيد المعالجة</button>
-              <button type="button" class="chip" data-filter="done" aria-pressed="false">مكتملة</button>
-            </div>
+          </div>
+          <div class="tabs" id="orderTabs" role="tablist" aria-label="أقسام الطلبات">
+            <button type="button" class="tab active" role="tab" aria-selected="true" data-tab="processing">قيد المعالجة <span class="n" id="tabProcessing">0</span></button>
+            <button type="button" class="tab" role="tab" aria-selected="false" data-tab="received">تم الاستلام <span class="n" id="tabReceived">0</span></button>
+            <button type="button" class="tab" role="tab" aria-selected="false" data-tab="cancelled">الملغاة <span class="n" id="tabCancelled">0</span></button>
           </div>
           <div id="ordersContent"></div>
         </section>
@@ -1279,6 +1398,19 @@ body.light .auth-error{color:#B91C1C;}
 
   </div>
 </main>
+
+<!-- ========== Confirm dialog + toast ========== -->
+<div class="dlg-overlay" id="confirmOverlay" role="dialog" aria-modal="true" aria-labelledby="confirmTitle" hidden>
+  <div class="dlg">
+    <h3 id="confirmTitle"></h3>
+    <p id="confirmText"></p>
+    <div class="dlg-actions">
+      <button type="button" class="btn btn-primary" id="confirmYes"></button>
+      <button type="button" class="btn btn-ghost" id="confirmNo">رجوع</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
 <footer>
   <div class="wrap">
@@ -1348,6 +1480,7 @@ body.light .auth-error{color:#B91C1C;}
   };
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
+  auth.languageCode = 'ar';
   const googleProvider = new firebase.auth.GoogleAuthProvider();
   const db = firebase.firestore();
 
@@ -1379,191 +1512,457 @@ body.light .auth-error{color:#B91C1C;}
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenuState(false); });
   })();
 
-  // ---------- Page state: loading | out | in ----------
+  // ---------- Small UI helpers ----------
+  let toastTimer = null;
+  function toast(msg, isError){
+    const t = $('toast');
+    t.textContent = msg;
+    t.classList.toggle('err', !!isError);
+    t.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.hidden = true; }, 3600);
+  }
+  function setBusy(btn, busy, busyText){
+    if (busy){ btn.dataset.label = btn.innerHTML; btn.innerHTML = busyText; btn.disabled = true; }
+    else { if (btn.dataset.label) btn.innerHTML = btn.dataset.label; btn.disabled = false; }
+  }
+  function showError(el, msg){ el.textContent = msg; el.classList.add('show'); }
+  function clearError(el){ el.textContent = ''; el.classList.remove('show'); }
+
+  // Page states: loading | out | profile | in
   function setState(state){
     $('stateLoading').hidden = state !== 'loading';
     $('stateOut').hidden = state !== 'out';
+    $('stateProfile').hidden = state !== 'profile';
     $('stateIn').hidden = state !== 'in';
   }
 
-  // ---------- Auth ----------
-  const authError = $('authError');
-  function showAuthError(msg){ authError.textContent = msg; authError.classList.add('show'); }
-  function clearAuthError(){ authError.textContent = ''; authError.classList.remove('show'); }
+  // ---------- Where to go after a fresh login (?next=netflix.html) ----------
+  const nextParam = new URLSearchParams(location.search).get('next');
+  const nextTarget = nextParam && /^[a-z0-9-]+\.html$/i.test(nextParam) ? nextParam : null;
+  let justSignedIn = false;
+
+  // ---------- Algerian phone numbers ----------
+  function normalizeDZ(raw){
+    let d = String(raw || '').replace(/[\s\-().]/g, '')
+      .replace(/[٠-٩]/g, (c) => String(c.charCodeAt(0) - 1632))
+      .replace(/[۰-۹]/g, (c) => String(c.charCodeAt(0) - 1776));
+    if (d.startsWith('+213')) d = d.slice(4);
+    else if (d.startsWith('00213')) d = d.slice(5);
+    else if (d.startsWith('213') && d.length === 12) d = d.slice(3);
+    if (d.startsWith('0')) d = d.slice(1);
+    if (!/^[567]\d{8}$/.test(d)) return { ok: false };
+    return { ok: true, national: d, e164: '+213' + d, local: '0' + d, display: '+213 ' + d.slice(0,3) + ' ' + d.slice(3,5) + ' ' + d.slice(5,7) + ' ' + d.slice(7,9) };
+  }
+  function formatE164(p){
+    const n = normalizeDZ(p);
+    return n.ok ? n.display : (p || '');
+  }
+
+  // ---------- Auth errors (Arabic) ----------
   function firebaseErrorMessage(err){
     const map = {
+      'auth/invalid-phone-number': 'رقم الهاتف غير صالح، تأكد منه وحاول مرة أخرى.',
+      'auth/missing-phone-number': 'أدخل رقم هاتفك أولاً.',
+      'auth/too-many-requests': 'محاولات كثيرة خلال وقت قصير، انتظر قليلاً ثم أعد المحاولة.',
+      'auth/quota-exceeded': 'تعذّر إرسال الرمز حالياً بسبب الضغط على الخدمة، حاول لاحقاً.',
+      'auth/invalid-verification-code': 'رمز التحقق غير صحيح، تأكد منه وحاول مرة أخرى.',
+      'auth/missing-verification-code': 'أدخل رمز التحقق المكوّن من 6 أرقام.',
+      'auth/code-expired': 'انتهت صلاحية الرمز، اطلب رمزاً جديداً.',
+      'auth/session-expired': 'انتهت صلاحية الرمز، اطلب رمزاً جديداً.',
+      'auth/captcha-check-failed': 'فشل التحقق الأمني، أعد المحاولة.',
+      'auth/user-disabled': 'هذا الحساب موقوف، تواصل معنا لمعرفة السبب.',
+      'auth/operation-not-allowed': 'التسجيل برقم الهاتف غير متاح حالياً، جرّب الدخول بحساب Google أو حاول لاحقاً.',
+      'auth/billing-not-enabled': 'التسجيل برقم الهاتف غير متاح حالياً، جرّب الدخول بحساب Google أو حاول لاحقاً.',
       'auth/popup-closed-by-user': 'تم إغلاق نافذة الدخول قبل إتمام العملية.',
       'auth/popup-blocked': 'المتصفح منع فتح نافذة الدخول، اسمح بالنوافذ المنبثقة وحاول مرة أخرى.',
       'auth/cancelled-popup-request': 'تم إلغاء الطلب، حاول مرة أخرى.',
       'auth/network-request-failed': 'تعذر الاتصال بالخادم، تحقق من اتصالك بالإنترنت.',
       'auth/unauthorized-domain': 'هذا النطاق غير مصرّح له بتسجيل الدخول، تحقق من إعدادات Firebase.'
     };
-    return map[err.code] || 'حدث خطأ غير متوقع، حاول مرة أخرى.';
+    console.error('Auth error:', err && err.code, err);
+    return map[err && err.code] || 'حدث خطأ غير متوقع، حاول مرة أخرى.';
   }
-  async function signIn(){
-    clearAuthError();
+
+  // ---------- Login: step 1 (phone) → step 2 (code) ----------
+  const authError = $('authError');
+  let verifier = null;
+  let confirmation = null;
+  let pendingPhone = null;
+  let cooldownTimer = null;
+
+  function resetVerifier(){
+    try { if (verifier) verifier.clear(); } catch (e) {}
+    verifier = null;
+    $('recaptcha-container').innerHTML = '';
+  }
+  function showStep(step){
+    const isOtp = step === 'otp';
+    $('phoneForm').hidden = isOtp;
+    $('otpForm').hidden = !isOtp;
+    $('loginTitle').textContent = isOtp ? 'أدخل رمز التحقق' : 'سجّل الدخول أو أنشئ حسابًا';
+    $('loginSub').textContent = isOtp ? 'اكتب الرمز المكوّن من 6 أرقام الذي وصلك في رسالة نصية.' : 'أدخل رقم هاتفك الجزائري وسنرسل لك رمز تحقق عبر رسالة نصية.';
+    clearError(authError);
+    if (isOtp) $('otpInput').focus({ preventScroll: true }); else $('phoneInput').focus({ preventScroll: true });
+  }
+  function startCooldown(seconds){
+    const btn = $('resendBtn');
+    clearInterval(cooldownTimer);
+    let left = seconds;
+    btn.disabled = true;
+    btn.innerHTML = 'إعادة الإرسال بعد <span id="resendTimer">' + left + '</span> ث';
+    cooldownTimer = setInterval(() => {
+      left -= 1;
+      if (left <= 0){ clearInterval(cooldownTimer); btn.disabled = false; btn.textContent = 'إعادة إرسال الرمز'; }
+      else { btn.innerHTML = 'إعادة الإرسال بعد <span id="resendTimer">' + left + '</span> ث'; }
+    }, 1000);
+  }
+
+  async function sendCode(isResend){
+    clearError(authError);
+    const phone = isResend ? pendingPhone : normalizeDZ($('phoneInput').value);
+    if (!phone || !phone.ok){ showError(authError, 'أدخل رقم هاتف جزائري صحيح، مثال: 0555 12 34 56'); $('phoneInput').focus(); return; }
+    const btn = isResend ? $('resendBtn') : $('sendCodeBtn');
+    if (!isResend) setBusy(btn, true, 'جارٍ إرسال الرمز...'); else btn.disabled = true;
+    try {
+      resetVerifier();
+      verifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { size: 'invisible' });
+      confirmation = await auth.signInWithPhoneNumber(phone.e164, verifier);
+      pendingPhone = phone;
+      $('otpPhoneLabel').textContent = phone.display;
+      $('otpInput').value = '';
+      showStep('otp');
+      startCooldown(60);
+      if (isResend) toast('تم إرسال رمز جديد');
+    } catch (err){
+      resetVerifier();
+      showError(authError, firebaseErrorMessage(err));
+      if (isResend) startCooldown(15);
+    } finally {
+      if (!isResend) setBusy(btn, false);
+    }
+  }
+  $('phoneForm').addEventListener('submit', (e) => { e.preventDefault(); sendCode(false); });
+  $('resendBtn').addEventListener('click', () => sendCode(true));
+  $('changePhoneBtn').addEventListener('click', () => {
+    clearInterval(cooldownTimer); confirmation = null; resetVerifier(); showStep('phone');
+  });
+  $('otpInput').addEventListener('input', (e) => {
+    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6);
+  });
+  $('otpForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearError(authError);
+    const code = $('otpInput').value.replace(/\D/g, '');
+    if (code.length !== 6){ showError(authError, 'أدخل رمز التحقق المكوّن من 6 أرقام.'); $('otpInput').focus(); return; }
+    if (!confirmation){ showError(authError, 'انتهت الجلسة، اطلب رمزاً جديداً.'); showStep('phone'); return; }
+    const btn = $('verifyBtn');
+    setBusy(btn, true, 'جارٍ التحقق...');
+    try {
+      justSignedIn = true;
+      await confirmation.confirm(code);
+      clearInterval(cooldownTimer);
+      confirmation = null;
+    } catch (err){
+      justSignedIn = false;
+      showError(authError, firebaseErrorMessage(err));
+    } finally {
+      setBusy(btn, false);
+    }
+  });
+
+  // ---------- Google (kept as a second option) ----------
+  $('googleSignInBtn').addEventListener('click', async () => {
+    clearError(authError);
     const btn = $('googleSignInBtn');
     btn.disabled = true;
     try {
+      justSignedIn = true;
       await auth.signInWithPopup(googleProvider);
     } catch (err){
-      showAuthError(firebaseErrorMessage(err));
+      justSignedIn = false;
+      showError(authError, firebaseErrorMessage(err));
     } finally {
       btn.disabled = false;
     }
-  }
-  $('googleSignInBtn').addEventListener('click', signIn);
-  $('logoutBtn').addEventListener('click', () => auth.signOut());
+  });
 
-  // Header account button (same look as the store header)
+  $('logoutBtn').addEventListener('click', () => auth.signOut());
+  $('profileLogoutBtn').addEventListener('click', () => auth.signOut());
+
+  // ---------- Profile (username + optional email) ----------
+  let profile = null;   // data of users/{uid}
+  const profileError = $('profileError');
+
+  async function loadProfile(user){
+    const snap = await db.collection('users').doc(user.uid).get();
+    return snap.exists ? snap.data() : null;
+  }
+  const isPhoneUser = (user) => !!user.phoneNumber || (user.providerData || []).some((p) => p.providerId === 'phone');
+
+  function cleanUsername(v){ return String(v || '').replace(/\s+/g, ' ').trim(); }
+  const USERNAME_RE = /^[\p{L}\p{N}_.\- ]{3,30}$/u;
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  $('profileForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearError(profileError);
+    const user = auth.currentUser;
+    if (!user){ setState('out'); return; }
+    const username = cleanUsername($('usernameInput').value);
+    const email = $('emailInput').value.trim();
+    if (!USERNAME_RE.test(username)){ showError(profileError, 'اسم المستخدم يجب أن يكون من 3 إلى 30 حرفاً (حروف وأرقام و _ . - ومسافات).'); $('usernameInput').focus(); return; }
+    if (email && !EMAIL_RE.test(email)){ showError(profileError, 'صيغة البريد الإلكتروني غير صحيحة، أو اتركه فارغاً.'); $('emailInput').focus(); return; }
+    const btn = $('profileSaveBtn');
+    setBusy(btn, true, 'جارٍ إنشاء الحساب...');
+    try {
+      const data = { username, email: email || null, phone: user.phoneNumber || null, createdAt: firebase.firestore.FieldValue.serverTimestamp() };
+      await db.collection('users').doc(user.uid).set(data, { merge: true });
+      try { await user.updateProfile({ displayName: username }); } catch (err) { console.warn('updateProfile failed', err); }
+      profile = { username, email: email || null, phone: user.phoneNumber || null };
+      enterAccount(user);
+    } catch (err){
+      console.error('Saving profile failed:', err);
+      showError(profileError, 'تعذّر حفظ بياناتك الآن، تحقق من اتصالك وحاول مرة أخرى.');
+    } finally {
+      setBusy(btn, false);
+    }
+  });
+
+  // ---------- Header account button ----------
   function renderHeaderAccount(user){
     const area = $('accountArea');
     if (user){
-      const initial = (user.displayName || user.email || '؟').trim().charAt(0).toUpperCase();
+      const label = (profile && profile.username) || user.displayName || user.email || '؟';
       area.innerHTML = '<a class="acc-avatar" href="#top" aria-label="حسابي" title="حسابي"></a>';
-      area.firstChild.textContent = initial;
+      area.firstChild.textContent = String(label).trim().charAt(0).toUpperCase();
     } else {
-      area.innerHTML = '<button class="acc-btn" id="authOpenBtn" type="button">تسجيل الدخول</button>';
-      $('authOpenBtn').addEventListener('click', signIn);
+      area.innerHTML = '<button class="acc-btn" id="authOpenBtn" type="button" aria-label="تسجيل الدخول">تسجيل الدخول</button>';
+      $('authOpenBtn').addEventListener('click', () => { setState('out'); $('stateOut').scrollIntoView({ behavior: 'smooth', block: 'center' }); const f = $('phoneForm').hidden ? $('otpInput') : $('phoneInput'); f.focus({ preventScroll: true }); });
     }
   }
 
   function renderProfile(user){
-    const label = (user.displayName || user.email || '؟').trim();
-    $('sideAvatar').textContent = label.charAt(0).toUpperCase();
-    $('sideName').textContent = user.displayName || user.email || '';
-    $('sideEmail').textContent = user.email || '';
+    const name = (profile && profile.username) || user.displayName || user.email || formatE164(user.phoneNumber) || '؟';
+    $('sideAvatar').textContent = String(name).trim().charAt(0).toUpperCase();
+    $('sideName').textContent = name;
+    const phoneEl = $('sidePhone');
+    if (user.phoneNumber){ phoneEl.textContent = formatE164(user.phoneNumber); phoneEl.hidden = false; } else { phoneEl.hidden = true; }
+    $('sideEmail').textContent = (profile && profile.email) || user.email || '';
     const since = $('sideSince');
     if (user.metadata && user.metadata.creationTime){
       since.textContent = 'عضو منذ ' + new Date(user.metadata.creationTime).toLocaleDateString('ar-DZ');
       since.hidden = false;
-    } else {
-      since.hidden = true;
-    }
+    } else { since.hidden = true; }
   }
 
-  // ---------- Orders (from Firestore) ----------
-  const STATUS_LABEL = { new: 'قيد المعالجة', pending: 'قيد المعالجة', done: 'مكتمل', completed: 'مكتمل', activated: 'مفعّل' };
-  const isDone = (status) => status === 'done' || status === 'completed' || status === 'activated';
+  // ---------- Orders ----------
+  const STATUS_LABEL = { new: 'قيد المعالجة', pending: 'قيد المعالجة', activated: 'مفعّل', done: 'مكتمل', completed: 'مكتمل', received: 'تم الاستلام', cancelled: 'ملغي' };
+  const groupOf = (status) => status === 'received' ? 'received' : status === 'cancelled' ? 'cancelled' : 'processing';
+  const canCancel = (status) => status === 'new' || status === 'pending' || !status;
   const receiptIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10a1 1 0 011 1v16l-3-2-2 2-2-2-2 2-3-2V4a1 1 0 011-1z"/><path d="M9 8h6M9 12h6"/></svg>';
+  const EMPTY = {
+    processing: ['لا توجد طلبات قيد المعالجة', 'عند إرسال طلب جديد سيظهر هنا، ويمكنك متابعته أو إلغاؤه.', true],
+    received:   ['لا توجد طلبات مستلمة بعد', 'بعد استلام اشتراكك اضغط «تم استلام الطلب» ليظهر هنا.', false],
+    cancelled:  ['لا توجد طلبات ملغاة', 'الطلبات التي تلغيها ستظهر في هذا القسم.', false]
+  };
 
   let allOrders = [];
-  let activeFilter = 'all';
+  let activeTab = 'processing';
   let ordersRequest = 0;
 
-  function skeletonHTML(){
-    return '<div class="skeleton-col"><div class="skeleton-box skeleton-row"></div><div class="skeleton-box skeleton-row"></div><div class="skeleton-box skeleton-row"></div></div>';
+  const skeletonHTML = () => '<div class="skeleton-col"><div class="skeleton-box skeleton-row"></div><div class="skeleton-box skeleton-row"></div><div class="skeleton-box skeleton-row"></div></div>';
+  const stateCardHTML = (title, text, withButton) =>
+    '<div class="state-card"><div class="state-icon">' + receiptIcon + '</div><h3>' + title + '</h3><p>' + text + '</p>' +
+    (withButton ? '<a href="index.html#products" class="btn btn-primary">تصفّح المنتجات</a>' : '') + '</div>';
+  const millis = (o) => (o.createdAt && o.createdAt.toMillis) ? o.createdAt.toMillis() : Date.now();
+
+  function counts(){
+    const c = { processing: 0, received: 0, cancelled: 0 };
+    allOrders.forEach((o) => { c[groupOf(o.status)] += 1; });
+    return c;
   }
-  function stateCardHTML(title, text, withButton){
-    return '<div class="state-card"><div class="state-icon">' + receiptIcon + '</div><h3>' + title + '</h3><p>' + text + '</p>' +
-      (withButton ? '<a href="index.html#products" class="btn btn-primary">تصفّح المنتجات</a>' : '') + '</div>';
+  function renderCounts(){
+    const c = counts();
+    $('statTotal').textContent = String(allOrders.length);
+    $('statPending').textContent = String(c.processing);
+    $('statDone').textContent = String(c.received);
+    $('tabProcessing').textContent = String(c.processing);
+    $('tabReceived').textContent = String(c.received);
+    $('tabCancelled').textContent = String(c.cancelled);
+    const side = $('sOrdersCount');
+    side.textContent = c.processing ? String(c.processing) : '';
+    side.classList.toggle('show', c.processing > 0);
   }
 
-  function renderStats(){
-    const total = allOrders.length;
-    const done = allOrders.filter((o) => isDone(o.status)).length;
-    $('statTotal').textContent = String(total);
-    $('statDone').textContent = String(done);
-    $('statPending').textContent = String(total - done);
-    const count = $('sOrdersCount');
-    count.textContent = total ? String(total) : '';
-    count.classList.toggle('show', total > 0);
+  function orderCardHTML(o){
+    const group = groupOf(o.status);
+    const date = o.createdAt && o.createdAt.toDate ? o.createdAt.toDate().toLocaleDateString('ar-DZ') : '';
+    const label = STATUS_LABEL[o.status] || 'قيد المعالجة';
+    const ref = '#' + esc(String(o.id).slice(0, 6).toUpperCase());
+    let actions = '';
+    if (group === 'processing'){
+      actions = '<div class="order-actions">' +
+        '<button type="button" class="o-btn o-btn-ok" data-act="received" data-id="' + esc(o.id) + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>تم استلام الطلب</button>' +
+        (canCancel(o.status) ? '<button type="button" class="o-btn o-btn-cancel" data-act="cancel" data-id="' + esc(o.id) + '">إلغاء الطلب</button>' : '') +
+        '</div>';
+    }
+    return '<div class="order-card' + (group === 'received' ? ' is-done' : '') + (group === 'cancelled' ? ' is-cancelled' : '') + '">' +
+      '<div class="order-icon">' + receiptIcon + '</div>' +
+      '<div class="order-main">' +
+        '<div class="order-name" title="' + esc(o.product) + '">' + esc(o.product) + '</div>' +
+        '<div class="order-meta">' + (date ? '<span>' + esc(date) + '</span><span class="dot">•</span>' : '') +
+          (o.duration ? '<span>' + esc(o.duration) + '</span><span class="dot">•</span>' : '') +
+          '<span>رقم الطلب ' + ref + '</span></div>' +
+      '</div>' +
+      '<div class="order-side">' +
+        (o.total ? '<div class="order-price">' + esc(o.total) + ' دج</div>' : '') +
+        '<span class="order-status' + (group === 'received' ? ' status-done' : '') + (group === 'cancelled' ? ' status-cancelled' : '') + '">' + label + '</span>' +
+      '</div>' + actions +
+    '</div>';
   }
 
   function renderOrders(){
-    const content = $('ordersContent');
-    const chips = $('chips');
-    const sub = $('ordersSub');
-
-    if (allOrders.length === 0){
-      chips.hidden = true;
-      sub.textContent = '';
-      content.innerHTML = stateCardHTML('لا توجد طلبات بعد', 'تصفّح المنتجات وابدأ طلبك الأول، وسيظهر هنا فور تأكيده.', true);
-      return;
-    }
-
-    chips.hidden = false;
-    chips.querySelectorAll('.chip').forEach((chip) => {
-      const on = chip.dataset.filter === activeFilter;
-      chip.classList.toggle('active', on);
-      chip.setAttribute('aria-pressed', String(on));
+    renderCounts();
+    document.querySelectorAll('#orderTabs .tab').forEach((tab) => {
+      const on = tab.dataset.tab === activeTab;
+      tab.classList.toggle('active', on);
+      tab.setAttribute('aria-selected', String(on));
     });
-
-    const list = allOrders.filter((o) =>
-      activeFilter === 'all' ? true : activeFilter === 'done' ? isDone(o.status) : !isDone(o.status));
-    sub.textContent = list.length + ' من ' + allOrders.length + ' طلب';
-
+    const list = allOrders.filter((o) => groupOf(o.status) === activeTab);
+    $('ordersSub').textContent = allOrders.length ? (list.length + ' من ' + allOrders.length + ' طلب') : '';
     if (list.length === 0){
-      content.innerHTML = stateCardHTML('لا توجد طلبات في هذه الفئة', 'جرّب اختيار فئة أخرى من الأعلى.', false);
+      const e = EMPTY[activeTab];
+      $('ordersContent').innerHTML = stateCardHTML(e[0], e[1], e[2]);
       return;
     }
-
-    content.innerHTML = '<div class="order-list">' + list.map((o) => {
-      const done = isDone(o.status);
-      const date = o.createdAt && o.createdAt.toDate ? o.createdAt.toDate().toLocaleDateString('ar-DZ') : '';
-      const label = STATUS_LABEL[o.status] || 'قيد المعالجة';
-      const ref = '#' + esc(String(o.id).slice(0, 6).toUpperCase());
-      return '<div class="order-card' + (done ? ' is-done' : '') + '">' +
-        '<div class="order-icon">' + receiptIcon + '</div>' +
-        '<div class="order-main">' +
-          '<div class="order-name" title="' + esc(o.product) + '">' + esc(o.product) + '</div>' +
-          '<div class="order-meta">' + (date ? '<span>' + esc(date) + '</span><span class="dot">•</span>' : '') + '<span>رقم الطلب ' + ref + '</span></div>' +
-        '</div>' +
-        '<div class="order-side">' +
-          (o.total ? '<div class="order-price">' + esc(o.total) + ' دج</div>' : '') +
-          '<span class="order-status' + (done ? ' status-done' : '') + '">' + label + '</span>' +
-        '</div>' +
-      '</div>';
-    }).join('') + '</div>';
+    $('ordersContent').innerHTML = '<div class="order-list">' + list.map(orderCardHTML).join('') + '</div>';
   }
 
-  $('chips').addEventListener('click', (e) => {
-    const chip = e.target.closest('.chip');
-    if (!chip) return;
-    activeFilter = chip.dataset.filter;
+  $('orderTabs').addEventListener('click', (e) => {
+    const tab = e.target.closest('.tab');
+    if (!tab) return;
+    activeTab = tab.dataset.tab;
     renderOrders();
   });
+
+  async function fetchOrders(user){
+    const jobs = [db.collection('orders').where('uid', '==', user.uid).get()];
+    // Orders made before phone accounts existed were tied to the Google e-mail
+    if (user.email) jobs.push(db.collection('orders').where('accountEmail', '==', user.email).get());
+    const results = await Promise.allSettled(jobs);
+    if (results.every((r) => r.status === 'rejected')) throw results[0].reason;
+    const map = new Map();
+    results.forEach((r) => { if (r.status === 'fulfilled') r.value.docs.forEach((d) => map.set(d.id, Object.assign({ id: d.id }, d.data()))); });
+    return Array.from(map.values()).sort((a, b) => millis(b) - millis(a));
+  }
 
   function loadOrders(user){
     const request = ++ordersRequest;
     allOrders = [];
-    activeFilter = 'all';
+    activeTab = 'processing';
     ['statTotal', 'statPending', 'statDone'].forEach((id) => { $(id).textContent = '—'; });
-    $('chips').hidden = true;
     $('ordersSub').textContent = '';
     $('ordersContent').innerHTML = skeletonHTML();
+    fetchOrders(user).then((orders) => {
+      if (request !== ordersRequest) return;
+      allOrders = orders;
+      renderOrders();
+    }).catch((err) => {
+      if (request !== ordersRequest) return;
+      console.error('Failed to load orders:', err);
+      $('ordersContent').innerHTML = stateCardHTML('تعذّر تحميل الطلبات', 'حدث خطأ أثناء الاتصال بالخادم، حاول تحديث الصفحة بعد قليل.', false);
+    });
+  }
 
-    db.collection('orders')
-      .where('accountEmail', '==', user.email)
-      .orderBy('createdAt', 'desc')
-      .get()
-      .then((snapshot) => {
-        if (request !== ordersRequest) return;
-        allOrders = snapshot.docs.map((doc) => Object.assign({ id: doc.id }, doc.data()));
-        renderStats();
-        renderOrders();
-      })
-      .catch((err) => {
-        if (request !== ordersRequest) return;
-        console.error('Failed to load orders:', err);
-        $('chips').hidden = true;
-        $('ordersContent').innerHTML = stateCardHTML('تعذّر تحميل الطلبات', 'حدث خطأ أثناء الاتصال بالخادم، حاول تحديث الصفحة بعد قليل.', false);
-      });
+  // ---------- Cancel / "received" actions ----------
+  let confirmResolve = null;
+  function askConfirm(title, text, yesLabel, danger){
+    $('confirmTitle').textContent = title;
+    $('confirmText').textContent = text;
+    const yes = $('confirmYes');
+    yes.textContent = yesLabel;
+    yes.classList.toggle('btn-danger', !!danger);
+    yes.classList.toggle('btn-primary', !danger);
+    $('confirmOverlay').hidden = false;
+    yes.focus();
+    return new Promise((resolve) => { confirmResolve = resolve; });
+  }
+  function closeConfirm(result){
+    $('confirmOverlay').hidden = true;
+    if (confirmResolve){ const r = confirmResolve; confirmResolve = null; r(result); }
+  }
+  $('confirmYes').addEventListener('click', () => closeConfirm(true));
+  $('confirmNo').addEventListener('click', () => closeConfirm(false));
+  $('confirmOverlay').addEventListener('click', (e) => { if (e.target === $('confirmOverlay')) closeConfirm(false); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('confirmOverlay').hidden) closeConfirm(false); });
+
+  $('ordersContent').addEventListener('click', async (e) => {
+    const btn = e.target.closest('[data-act]');
+    if (!btn) return;
+    const order = allOrders.find((o) => o.id === btn.dataset.id);
+    if (!order) return;
+    const act = btn.dataset.act;
+    let newStatus, ok;
+    if (act === 'cancel'){
+      ok = await askConfirm('إلغاء هذا الطلب؟', 'سيتم إلغاء طلب «' + order.product + '» ولا يمكن التراجع عن ذلك.', 'نعم، إلغاء الطلب', true);
+      newStatus = 'cancelled';
+    } else {
+      ok = await askConfirm('تأكيد استلام الطلب', 'اضغط تأكيد فقط بعد أن تستلم اشتراكك «' + order.product + '» وتتأكد من عمله.', 'نعم، تم الاستلام', false);
+      newStatus = 'received';
+    }
+    if (!ok) return;
+    const card = btn.closest('.order-card');
+    card.querySelectorAll('.o-btn').forEach((b) => { b.disabled = true; });
+    try {
+      await db.collection('orders').doc(order.id).update({ status: newStatus, statusUpdatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+      order.status = newStatus;
+      renderOrders();
+      toast(newStatus === 'cancelled' ? 'تم إلغاء الطلب' : 'تم تأكيد استلام الطلب، شكراً لك!');
+    } catch (err){
+      console.error('Updating order failed:', err);
+      card.querySelectorAll('.o-btn').forEach((b) => { b.disabled = false; });
+      toast('تعذّر تنفيذ العملية الآن، حاول مرة أخرى.', true);
+    }
+  });
+
+  // ---------- Entering the account view ----------
+  function enterAccount(user){
+    if (justSignedIn && nextTarget){ justSignedIn = false; location.replace(nextTarget); return; }
+    justSignedIn = false;
+    renderHeaderAccount(user);
+    renderProfile(user);
+    setState('in');
+    loadOrders(user);
+    if (location.hash === '#ordersPanel') setTimeout(() => $('ordersPanel').scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
   }
 
   // ---------- Start ----------
   setState('loading');
   renderHeaderAccount(null);
-  auth.onAuthStateChanged((user) => {
-    renderHeaderAccount(user);
-    if (user){
-      renderProfile(user);
-      setState('in');
-      loadOrders(user);
-    } else {
+  let authRun = 0;
+  auth.onAuthStateChanged(async (user) => {
+    const run = ++authRun;
+    if (!user){
       ordersRequest++;
+      profile = null;
+      renderHeaderAccount(null);
       setState('out');
+      if (!confirmation) showStep('phone');
+      return;
     }
+    let prof = null;
+    try { prof = await loadProfile(user); } catch (err){ console.error('Loading profile failed:', err); }
+    if (run !== authRun) return;
+    profile = prof;
+    if (isPhoneUser(user) && !(prof && prof.username)){
+      renderHeaderAccount(user);
+      $('profilePhone').textContent = formatE164(user.phoneNumber);
+      setState('profile');
+      $('usernameInput').focus({ preventScroll: true });
+      return;
+    }
+    enterAccount(user);
   });
 
 </script>

@@ -1,0 +1,61 @@
+// ============================================================
+//  قواعد Firestore المقترحة لمتجر Petya  (Cloud Firestore → Rules)
+//  - لم أتمكن من تجربتها على Firebase الحقيقي: الصقها في
+//    Rules Playground واختبرها قبل النشر.
+//  - إن كانت لديك قواعد أخرى (مثلاً لوحة مشرف) فادمجها مع هذه
+//    ولا تستبدلها بالكامل.
+// ============================================================
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- ملف العميل: اسم المستخدم + البريد الاختياري ----------
+    match /users/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['username', 'email', 'phone', 'createdAt'])
+        && request.resource.data.username is string
+        && request.resource.data.username.size() >= 3
+        && request.resource.data.username.size() <= 30
+        && (request.resource.data.email == null
+            || (request.resource.data.email is string && request.resource.data.email.size() <= 120))
+        && request.resource.data.phone == request.auth.token.get('phone_number', null);
+      allow delete: if false;
+    }
+
+    // ---------- الطلبات ----------
+    match /orders/{orderId} {
+
+      // لا يُنشأ طلب إلا من عميل مسجّل الدخول، وبحالة "new" فقط
+      allow create: if request.auth != null
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.status == 'new'
+        && request.resource.data.keys().hasOnly(['name', 'phone', 'product', 'message', 'total',
+             'duration', 'uid', 'accountEmail', 'accountName', 'accountPhone', 'status', 'createdAt'])
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.name is string && request.resource.data.name.size() <= 100
+        && request.resource.data.phone is string && request.resource.data.phone.size() <= 30;
+
+      // العميل يقرأ طلباته فقط (الحساب الجديد عبر uid، والطلبات القديمة عبر بريد Google)
+      allow read: if request.auth != null && resource.data.uid == request.auth.uid;
+      allow read: if request.auth != null && request.auth.token.get('email', null) != null
+                  && resource.data.accountEmail == request.auth.token.get('email', null);
+
+      // العميل يغيّر "الحالة" فقط: إلغاء (قبل تفعيل الطلب) أو "تم الاستلام"
+      allow update: if request.auth != null
+        && (resource.data.get('uid', null) == request.auth.uid
+            || (request.auth.token.get('email', null) != null
+                && resource.data.get('accountEmail', null) == request.auth.token.get('email', null)))
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'statusUpdatedAt'])
+        && request.resource.data.statusUpdatedAt == request.time
+        && ((request.resource.data.status == 'cancelled' && resource.data.status in ['new', 'pending'])
+            || (request.resource.data.status == 'received'
+                && resource.data.status in ['new', 'pending', 'activated', 'done', 'completed']));
+
+      allow delete: if false;
+
+      // تغيير الحالات من طرفك (new → activated → done) يتم من لوحة Firebase
+      // أو من لوحة مشرف خاصة بك؛ أضف لها قاعدة هنا عند إنشائها.
+    }
+  }
+}

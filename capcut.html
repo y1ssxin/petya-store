@@ -1606,6 +1606,18 @@
   }
 </style>
 <style id="hide-login-btn">#accountArea{display:none !important;}</style>
+<style id="order-gate">
+.po-gate{display:none;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:26px 18px;margin-bottom:6px;border-radius:18px;background:var(--accent-soft);border:1px solid var(--border-strong);}
+.po-gate-ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:var(--bg-elev);color:var(--accent-2);}
+.po-gate strong{font-size:17px;}
+.po-gate p{margin:0;font-size:14px;line-height:1.9;color:var(--text-dim);}
+form[data-auth="out"] .po-gate{display:flex;}
+form[data-auth="out"] .field,form[data-auth="out"] .pm-form-actions{display:none;}
+form[data-auth="checking"] .field,form[data-auth="checking"] .pm-form-actions{opacity:.5;pointer-events:none;}
+.po-error{margin:0 0 12px;padding:10px 14px;border-radius:12px;background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.32);color:#F87171;font-size:13.5px;line-height:1.8;}
+body.light .po-error{color:#B91C1C;}
+.ty-track{margin:16px 0 18px;font-size:13.5px;line-height:1.9;color:var(--text-dim);}
+</style>
 </head>
 <body>
 <script>
@@ -2363,8 +2375,14 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
           <div class="pm-price" id="poPriceValue">1500 <small>دج / شهر</small></div>
           <div class="pm-flexy" id="poFlexyValue">📱 السعر عبر فليكسي Djezzy (+20%): <b>1800 دج</b></div>
         </div>
-        <form class="pm-order-form pm-form" id="poForm">
+        <form class="pm-order-form pm-form" id="poForm" data-auth="checking">
           <h4>أكمل طلبك الآن</h4>
+          <div class="po-gate" id="poGate">
+            <div class="po-gate-ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 018 0v3"/></svg></div>
+            <strong id="poGateTitle">سجّل الدخول لإتمام طلبك</strong>
+            <p id="poGateText">لطلب هذه الخدمة أنشئ حسابًا أو سجّل الدخول برقم هاتفك الجزائري، ثم عُد لإكمال طلبك.</p>
+            <a href="account.html" class="btn btn-primary" id="poGateBtn" style="width:100%;justify-content:center;">تسجيل الدخول / إنشاء حساب</a>
+          </div>
           <div class="field">
             <label for="po-name">الاسم الكامل</label>
             <input id="po-name" type="text" required>
@@ -2377,6 +2395,7 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
             <label for="po-msg">ملاحظات إضافية (اختياري)</label>
             <textarea id="po-msg" rows="3" placeholder="أي تفاصيل تريد إضافتها..."></textarea>
           </div>
+          <p class="po-error" id="poError" role="alert" hidden></p>
           <div class="pm-form-actions">
             <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">تأكيد الطلب</button>
           </div>
@@ -2468,12 +2487,14 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
       <h3 id="thankyouTitle">تم استلام طلبك بنجاح!</h3>
       <p>شكراً لك <span class="ty-name" id="tyName"></span>، فريقنا سيتواصل معك في أقرب وقت لإتمام تفعيل اشتراكك.</p>
       <div class="thankyou-summary" id="tySummary"></div>
+      <p class="ty-track">يمكنك متابعة حالة طلبك أو إلغاءه من صفحة «حسابي» ضمن قسم «قيد المعالجة».</p>
       <div class="pm-important-note" style="text-align:right;">
         <strong>⚠️ ملاحظة هامة</strong>
         <p>يُرجى التقاط صورة (Screenshot) للنافذة وإرسالها عبر واتساب لتأكيد الطلب وتسريع عملية المراجعة والتجهيز. شكرًا لتعاونكم. 🤝</p>
       </div>
       <div class="thankyou-actions">
         <a href="https://wa.me/message/MNQ3N2PJXGKBO1" target="_blank" rel="noopener" class="btn btn-gold" style="width:100%;justify-content:center;">اكد طلبك الآن عبر واتساب</a>
+        <a href="account.html#ordersPanel" class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:10px;">تابع طلبك في حسابي</a>
       </div>
     </div>
   </div>
@@ -2869,43 +2890,110 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
   });
 
   const poForm = document.getElementById('poForm');
-  poForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('po-name').value.trim();
-    const phone = document.getElementById('po-phone').value.trim();
-    const message = document.getElementById('po-msg').value.trim();
-    if (!name || !phone) return;
 
-    tyName.textContent = name;
-    tySummary.innerHTML = `
-      <div><b>المنتج:</b> ${PRODUCT_NAME}</div>
-      <div><b>الهاتف:</b> ${phone}</div>
-      ${message ? `<div><b>الرسالة:</b> ${message}</div>` : ''}
-    `;
+  // ---------- Orders need a signed-in account (phone / Google) ----------
+  (function(){
+    const gate = document.getElementById('poGate');
+    const gateBtn = document.getElementById('poGateBtn');
+    const gateTitle = document.getElementById('poGateTitle');
+    const gateText = document.getElementById('poGateText');
+    const errBox = document.getElementById('poError');
+    const nameInput = document.getElementById('po-name');
+    const phoneInput = document.getElementById('po-phone');
+    const msgInput = document.getElementById('po-msg');
+    const submitBtn = poForm.querySelector('button[type="submit"]');
+    const here = location.pathname.split('/').pop() || 'index.html';
+    if (gateBtn) gateBtn.href = 'account.html?next=' + encodeURIComponent(here);
 
-    db.collection('orders').add({
-      name,
-      phone,
-      product: PRODUCT_NAME,
-      message: message || null,
-      accountEmail: (auth.currentUser && auth.currentUser.email) || null,
-      status: 'new',
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    }).catch((err) => console.error('Failed to save order to Firestore:', err));
+    const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const localPhone = (p) => { const m = String(p || '').replace(/\D/g, '').match(/^213([567]\d{8})$/); return m ? '0' + m[1] : ''; };
+    const showErr = (msg) => { if (!errBox) return; errBox.textContent = msg || ''; errBox.hidden = !msg; };
+    nameInput.addEventListener('input', () => { nameInput.dataset.touched = '1'; });
+    phoneInput.addEventListener('input', () => { phoneInput.dataset.touched = '1'; });
 
-    closeThankYou();
-    openThankYou();
-    poForm.reset();
-    if (typeof currentUserName !== 'undefined' && currentUserName){
-      document.getElementById('po-name').value = currentUserName;
+    let account = null;          // users/{uid}
+    function fillForm(user){
+      const nm = (account && account.username) || user.displayName || '';
+      if (nm && !nameInput.dataset.touched) nameInput.value = nm;
+      const ph = localPhone(user.phoneNumber);
+      if (ph && !phoneInput.dataset.touched) phoneInput.value = ph;
     }
-  });
+    function lock(kind){
+      poForm.dataset.auth = 'out';
+      if (kind === 'profile'){
+        gateTitle.textContent = 'أكمل إنشاء حسابك لإتمام الطلب';
+        gateText.textContent = 'تم تأكيد رقمك، بقيت خطوة اختيار اسم المستخدم لإتمام التسجيل.';
+        gateBtn.textContent = 'إكمال إنشاء الحساب';
+      }
+    }
 
-  if (currentUserName){
-    const poNameInput = document.getElementById('po-name');
-    if (poNameInput) poNameInput.value = currentUserName;
-  }
+    auth.onAuthStateChanged(async (user) => {
+      showErr('');
+      if (!user){ account = null; lock('login'); return; }
+      fillForm(user);
+      let status = 'ok';
+      try {
+        const snap = await db.collection('users').doc(user.uid).get();
+        account = snap.exists ? snap.data() : null;
+        if (user.phoneNumber && !(account && account.username)) status = 'missing';
+      } catch (err){ console.error('Loading profile failed:', err); account = null; }
+      if (auth.currentUser !== user) return;
+      if (status === 'missing'){ lock('profile'); return; }
+      poForm.dataset.auth = 'in';
+      fillForm(user);
+    });
 
+    poForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user = auth.currentUser;
+      if (!user || poForm.dataset.auth !== 'in'){ gate.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+      const name = nameInput.value.trim();
+      const phone = phoneInput.value.trim();
+      const message = msgInput.value.trim();
+      if (!name || !phone) return;
+      showErr('');
+      const activeDuration = document.querySelector('.po-duration-btn.active');
+      const duration = activeDuration ? activeDuration.dataset.label : null;
+      const original = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'جارٍ إرسال الطلب...';
+      try {
+        await db.collection('orders').add({
+          name,
+          phone,
+          product: PRODUCT_NAME,
+          message: message || null,
+          total: PRODUCT_PRICE,
+          duration,
+          uid: user.uid,
+          accountEmail: user.email || null,
+          accountName: (account && account.username) || user.displayName || null,
+          accountPhone: user.phoneNumber || null,
+          status: 'new',
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      } catch (err){
+        console.error('Failed to save order:', err);
+        showErr('تعذّر إرسال طلبك الآن، تحقق من اتصالك بالإنترنت وحاول مرة أخرى.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = original;
+        return;
+      }
+      tyName.textContent = name;
+      tySummary.innerHTML = `
+        <div><b>المنتج:</b> ${esc(PRODUCT_NAME)}</div>
+        ${duration ? `<div><b>المدة:</b> ${esc(duration)}</div>` : ''}
+        <div><b>السعر:</b> ${esc(PRODUCT_PRICE)} دج</div>
+        <div><b>الهاتف:</b> ${esc(phone)}</div>
+        ${message ? `<div><b>الرسالة:</b> ${esc(message)}</div>` : ''}
+      `;
+      closeThankYou();
+      openThankYou();
+      msgInput.value = '';
+      submitBtn.disabled = false;
+      submitBtn.textContent = original;
+    });
+  })();
 </script>
 <script>(function(){const h=document.querySelector('header'),l=h&&h.querySelector('.logo'),n=h&&h.querySelector('#navLinks'),c=h&&h.querySelector('.nav-cta');if(!l||!n||!c)return;const t=l.children[1];if(t){t.className='logo-text';t.innerHTML='<span class="logo-name">Petya Digital Store</span>';}c.querySelectorAll(':scope > .btn').forEach(x=>x.remove());const a=h.querySelector('#authOpenBtn');if(a)a.textContent='تسجيل الدخول';n.classList.remove('open');n.hidden=true;const m=h.querySelector('#menuToggle');if(m&&!m.dataset.headerSync){m.dataset.headerSync='1';const set=open=>{n.classList.toggle('open',open);n.hidden=!open;m.setAttribute('aria-expanded',String(open));m.setAttribute('aria-label',open?'إغلاق القائمة':'فتح القائمة');};set(false);m.addEventListener('click',()=>set(n.hidden));n.querySelectorAll('a').forEach(x=>x.addEventListener('click',()=>set(false)));document.addEventListener('click',e=>{if(!h.contains(e.target))set(false);});document.addEventListener('keydown',e=>{if(e.key==='Escape')set(false);});}})();</script>
 </body>
