@@ -1186,6 +1186,10 @@ body.light .toast.err{color:#B91C1C;}
 
 .auth-error .err-code{display:block;margin-top:6px;font-size:12px;opacity:.75;font-family:ui-monospace,Menlo,Consolas,monospace;text-align:center;}
 
+/* Phone sign-in switched off (see PHONE_LOGIN_ENABLED in the script) */
+.phone-off .phone-only{display:none!important;}
+.phone-off .step .google-btn{margin-top:14px;}
+
 </style>
 </head>
 <body>
@@ -1257,14 +1261,14 @@ body.light .toast.err{color:#B91C1C;}
 
       <!-- step 1: phone number -->
       <form class="step" id="phoneForm" novalidate>
-        <label class="f-label" for="phoneInput">رقم الهاتف</label>
-        <div class="phone-field">
+        <label class="f-label phone-only" for="phoneInput">رقم الهاتف</label>
+        <div class="phone-field phone-only">
           <input id="phoneInput" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="0555 12 34 56" dir="ltr" maxlength="16">
           <span class="phone-prefix" dir="ltr">🇩🇿 +213</span>
         </div>
-        <p class="f-hint">أرقام الجزائر فقط (05 / 06 / 07).</p>
-        <button type="submit" class="btn btn-primary wide" id="sendCodeBtn">إرسال رمز التحقق</button>
-        <div class="or"><span>أو</span></div>
+        <p class="f-hint phone-only">أرقام الجزائر فقط (05 / 06 / 07).</p>
+        <button type="submit" class="btn btn-primary wide phone-only" id="sendCodeBtn">إرسال رمز التحقق</button>
+        <div class="or phone-only"><span>أو</span></div>
         <button type="button" id="googleSignInBtn" class="google-btn">
           <svg width="20" height="20" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/>
@@ -1293,7 +1297,7 @@ body.light .toast.err{color:#B91C1C;}
       <details class="privacy-box">
         <summary>بالمتابعة فإنك توافق على سياسة الخصوصية والشروط والأحكام</summary>
         <ul>
-          <li>نجمع بيانات حسابك الأساسية: رقم الهاتف واسم المستخدم، والبريد الإلكتروني إن أضفته، أو بيانات حساب Google إن اخترت الدخول به.</li>
+          <li>نجمع بيانات حسابك الأساسية (الاسم والبريد الإلكتروني من حساب Google، أو رقم الهاتف واسم المستخدم عند التسجيل بالهاتف).</li>
           <li>نستخدم بياناتك لتفعيل اشتراكاتك وتقديم الدعم والتواصل معك بخصوص طلباتك.</li>
           <li>لا نقوم ببيع أو مشاركة بياناتك مع أي طرف ثالث لأغراض تسويقية.</li>
           <li>تُحفظ بياناتك بشكل آمن، ويمكنك طلب حذف حسابك وبياناتك في أي وقت.</li>
@@ -1486,6 +1490,17 @@ body.light .toast.err{color:#B91C1C;}
   const googleProvider = new firebase.auth.GoogleAuthProvider();
   const db = firebase.firestore();
 
+  // ============================================================
+  //  مفتاح الدخول برقم الهاتف:
+  //  false = مخفي (Google فقط)   |   true = ظاهر (الهاتف + Google)
+  //  غيّره إلى true بعد تفعيل الفوترة (Blaze) في Firebase.
+  // ============================================================
+  const PHONE_LOGIN_ENABLED = false;
+  if (!PHONE_LOGIN_ENABLED){
+    document.body.classList.add('phone-off');
+    document.querySelector('#stateOut .state-icon').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+  }
+
   const $ = (id) => document.getElementById(id);
   const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
@@ -1606,10 +1621,10 @@ body.light .toast.err{color:#B91C1C;}
     const isOtp = step === 'otp';
     $('phoneForm').hidden = isOtp;
     $('otpForm').hidden = !isOtp;
-    $('loginTitle').textContent = isOtp ? 'أدخل رمز التحقق' : 'سجّل الدخول أو أنشئ حسابًا';
-    $('loginSub').textContent = isOtp ? 'اكتب الرمز المكوّن من 6 أرقام الذي وصلك في رسالة نصية.' : 'أدخل رقم هاتفك الجزائري وسنرسل لك رمز تحقق عبر رسالة نصية.';
+    $('loginTitle').textContent = isOtp ? 'أدخل رمز التحقق' : (PHONE_LOGIN_ENABLED ? 'سجّل الدخول أو أنشئ حسابًا' : 'سجّل الدخول إلى حسابك');
+    $('loginSub').textContent = isOtp ? 'اكتب الرمز المكوّن من 6 أرقام الذي وصلك في رسالة نصية.' : (PHONE_LOGIN_ENABLED ? 'أدخل رقم هاتفك الجزائري وسنرسل لك رمز تحقق عبر رسالة نصية.' : 'ادخل بحساب Google بضغطة واحدة لعرض طلباتك وإتمام طلباتك.');
     clearError(authError);
-    if (isOtp) $('otpInput').focus({ preventScroll: true }); else $('phoneInput').focus({ preventScroll: true });
+    if (isOtp) $('otpInput').focus({ preventScroll: true }); else if (PHONE_LOGIN_ENABLED) $('phoneInput').focus({ preventScroll: true });
   }
   function startCooldown(seconds){
     const btn = $('resendBtn');
@@ -1625,6 +1640,7 @@ body.light .toast.err{color:#B91C1C;}
   }
 
   async function sendCode(isResend){
+    if (!PHONE_LOGIN_ENABLED) return;
     clearError(authError);
     const phone = isResend ? pendingPhone : normalizeDZ($('phoneInput').value);
     if (!phone || !phone.ok){ showError(authError, 'أدخل رقم هاتف جزائري صحيح، مثال: 0555 12 34 56'); $('phoneInput').focus(); return; }
@@ -1744,7 +1760,7 @@ body.light .toast.err{color:#B91C1C;}
       area.firstChild.textContent = String(label).trim().charAt(0).toUpperCase();
     } else {
       area.innerHTML = '<button class="acc-btn" id="authOpenBtn" type="button" aria-label="تسجيل الدخول">تسجيل الدخول</button>';
-      $('authOpenBtn').addEventListener('click', () => { setState('out'); $('stateOut').scrollIntoView({ behavior: 'smooth', block: 'center' }); const f = $('phoneForm').hidden ? $('otpInput') : $('phoneInput'); f.focus({ preventScroll: true }); });
+      $('authOpenBtn').addEventListener('click', () => { setState('out'); $('stateOut').scrollIntoView({ behavior: 'smooth', block: 'center' }); const f = $('phoneForm').hidden ? $('otpInput') : (PHONE_LOGIN_ENABLED ? $('phoneInput') : $('googleSignInBtn')); f.focus({ preventScroll: true }); });
     }
   }
 
