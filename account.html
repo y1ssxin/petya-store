@@ -1184,6 +1184,8 @@ body.light .toast.err{color:#B91C1C;}
   .o-btn{flex:1;}
 }
 
+.auth-error .err-code{display:block;margin-top:6px;font-size:12px;opacity:.75;font-family:ui-monospace,Menlo,Consolas,monospace;text-align:center;}
+
 </style>
 </head>
 <body>
@@ -1526,7 +1528,11 @@ body.light .toast.err{color:#B91C1C;}
     if (busy){ btn.dataset.label = btn.innerHTML; btn.innerHTML = busyText; btn.disabled = true; }
     else { if (btn.dataset.label) btn.innerHTML = btn.dataset.label; btn.disabled = false; }
   }
-  function showError(el, msg){ el.textContent = msg; el.classList.add('show'); }
+  function showError(el, msg, code){
+    el.textContent = msg;
+    if (code){ const s = document.createElement('span'); s.className = 'err-code'; s.dir = 'ltr'; s.textContent = code; el.appendChild(s); }
+    el.classList.add('show');
+  }
   function clearError(el){ el.textContent = ''; el.classList.remove('show'); }
 
   // Page states: loading | out | profile | in
@@ -1636,7 +1642,7 @@ body.light .toast.err{color:#B91C1C;}
       if (isResend) toast('تم إرسال رمز جديد');
     } catch (err){
       resetVerifier();
-      showError(authError, firebaseErrorMessage(err));
+      showError(authError, firebaseErrorMessage(err), err && err.code);
       if (isResend) startCooldown(15);
     } finally {
       if (!isResend) setBusy(btn, false);
@@ -1665,7 +1671,7 @@ body.light .toast.err{color:#B91C1C;}
       confirmation = null;
     } catch (err){
       justSignedIn = false;
-      showError(authError, firebaseErrorMessage(err));
+      showError(authError, firebaseErrorMessage(err), err && err.code);
     } finally {
       setBusy(btn, false);
     }
@@ -1681,7 +1687,7 @@ body.light .toast.err{color:#B91C1C;}
       await auth.signInWithPopup(googleProvider);
     } catch (err){
       justSignedIn = false;
-      showError(authError, firebaseErrorMessage(err));
+      showError(authError, firebaseErrorMessage(err), err && err.code);
     } finally {
       btn.disabled = false;
     }
