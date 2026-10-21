@@ -1190,6 +1190,29 @@ body.light .toast.err{color:#B91C1C;}
 .phone-off .phone-only{display:none!important;}
 .phone-off .step .google-btn{margin-top:14px;}
 
+/* ---------- avatar photo (Google) ---------- */
+.side-avatar-inner img,.acc-avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;}
+.acc-avatar{overflow:hidden;}
+.edit-profile-btn{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:9px 16px;border-radius:999px;border:1px solid var(--border-strong);background:transparent;color:var(--text-dim);font-size:13px;font-weight:700;cursor:pointer;transition:background .2s,color .2s;}
+.edit-profile-btn:hover{background:var(--hover-tint-strong);color:var(--text);}
+.dlg-form{text-align:right;display:flex;flex-direction:column;gap:10px;max-width:440px;}
+.dlg-form h3{text-align:center;margin-bottom:4px;}
+.dlg-form .dlg-actions{margin-top:10px;}
+.dlg-form .text-input:disabled{opacity:.6;cursor:not-allowed;}
+/* ---------- order buttons: received / not received / cancel ---------- */
+.o-btn-warn{background:rgba(251,191,36,.12);color:#FBBF24;border-color:rgba(251,191,36,.45);}
+.o-btn-warn:hover{background:rgba(251,191,36,.2);}
+body.light .o-btn-warn{color:#B45309;border-color:rgba(180,83,9,.4);background:rgba(245,158,11,.12);}
+.o-btn-text{background:none;border:0;color:var(--text-faint);padding:10px 8px;margin-inline-start:auto;font-size:13px;text-decoration:underline;text-underline-offset:3px;}
+.o-btn-text:hover{color:#F87171;}
+.order-flag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#FBBF24;}
+body.light .order-flag{color:#B45309;}
+
+@media (max-width:640px){
+  .order-actions .o-btn{flex:1 1 calc(50% - 6px);min-width:0;padding:11px 10px;line-height:1.4;text-align:center;}
+  .order-actions .o-btn-text{flex:1 1 100%;margin:0;padding:6px;text-align:center;}
+}
+
 </style>
 </head>
 <body>
@@ -1336,6 +1359,10 @@ body.light .toast.err{color:#B91C1C;}
           <div class="side-phone" id="sidePhone" dir="ltr" hidden></div>
           <div class="side-email" id="sideEmail"></div>
           <div class="side-since" id="sideSince" hidden></div>
+          <button type="button" class="edit-profile-btn" id="editProfileBtn">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9a2.8 2.8 0 00-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>
+            تعديل الملف الشخصي
+          </button>
         </div>
         <ul class="side-nav">
           <li>
@@ -1404,6 +1431,24 @@ body.light .toast.err{color:#B91C1C;}
 
   </div>
 </main>
+
+<!-- ========== Edit profile dialog ========== -->
+<div class="dlg-overlay" id="profileOverlay" role="dialog" aria-modal="true" aria-labelledby="profileDlgTitle" hidden>
+  <form class="dlg dlg-form" id="editProfileForm" novalidate>
+    <h3 id="profileDlgTitle">تعديل الملف الشخصي</h3>
+    <p class="auth-error" id="editError" role="alert"></p>
+    <label class="f-label" for="editUsername">اسم المستخدم <span class="req">*</span></label>
+    <input id="editUsername" class="text-input" type="text" maxlength="30" autocomplete="nickname">
+    <label class="f-label" for="editWhatsapp">رقم الواتساب <span class="opt">(يُعبَّأ تلقائيًا في طلباتك)</span></label>
+    <input id="editWhatsapp" class="text-input" type="tel" inputmode="tel" dir="ltr" maxlength="20" placeholder="0555 12 34 56" autocomplete="tel">
+    <label class="f-label" for="editEmail">البريد الإلكتروني <span class="opt" id="editEmailNote">(اختياري)</span></label>
+    <input id="editEmail" class="text-input" type="email" dir="ltr" maxlength="120" placeholder="name@example.com" autocomplete="email">
+    <div class="dlg-actions">
+      <button type="submit" class="btn btn-primary" id="editSaveBtn">حفظ التغييرات</button>
+      <button type="button" class="btn btn-ghost" id="editCancelBtn">إلغاء</button>
+    </div>
+  </form>
+</div>
 
 <!-- ========== Confirm dialog + toast ========== -->
 <div class="dlg-overlay" id="confirmOverlay" role="dialog" aria-modal="true" aria-labelledby="confirmTitle" hidden>
@@ -1720,6 +1765,45 @@ body.light .toast.err{color:#B91C1C;}
     const snap = await db.collection('users').doc(user.uid).get();
     return snap.exists ? snap.data() : null;
   }
+  const WHATSAPP_URL = 'https://wa.me/message/MNQ3N2PJXGKBO1';
+  const TS = () => firebase.firestore.FieldValue.serverTimestamp();
+
+  // Shows the photo when we have one, otherwise the first letter of the name
+  function avatarInto(el, name, photo){
+    const letter = String(name || '؟').trim().charAt(0).toUpperCase() || '؟';
+    el.textContent = letter;
+    if (!photo) return;
+    const img = new Image();
+    img.alt = '';
+    img.referrerPolicy = 'no-referrer';
+    img.onload = () => { el.textContent = ''; el.appendChild(img); };
+    img.src = photo;
+  }
+  const safeName = (v) => {
+    let s = String(v || '').replace(/[^\p{L}\p{N}_.\- ]/gu, ' ').replace(/\s+/g, ' ').trim().slice(0, 30);
+    return s.length >= 3 ? s : 'عميل Petya';
+  };
+
+  // Google accounts: take name, photo and e-mail from Google once and keep them in Firebase
+  async function ensureProfile(user){
+    let prof = await loadProfile(user);
+    if (isPhoneUser(user)) return prof;
+    const patch = {};
+    if (!prof || !prof.username) patch.username = safeName(user.displayName || (user.email || '').split('@')[0]);
+    if (user.email && (!prof || prof.email !== user.email)) patch.email = user.email;
+    if (user.photoURL && (!prof || prof.photoURL !== user.photoURL)) patch.photoURL = user.photoURL;
+    if (!Object.keys(patch).length) return prof;
+    const write = Object.assign({}, patch, { updatedAt: TS() });
+    if (!prof) write.createdAt = TS();
+    try {
+      await db.collection('users').doc(user.uid).set(write, { merge: true });
+      prof = Object.assign({}, prof || {}, patch);
+    } catch (err){
+      console.warn('Saving the Google profile failed:', err);
+      prof = Object.assign({}, prof || {}, patch);   // still show it for this visit
+    }
+    return prof;
+  }
   const isPhoneUser = (user) => !!user.phoneNumber || (user.providerData || []).some((p) => p.providerId === 'phone');
 
   function cleanUsername(v){ return String(v || '').replace(/\s+/g, ' ').trim(); }
@@ -1738,7 +1822,7 @@ body.light .toast.err{color:#B91C1C;}
     const btn = $('profileSaveBtn');
     setBusy(btn, true, 'جارٍ إنشاء الحساب...');
     try {
-      const data = { username, email: email || null, phone: user.phoneNumber || null, createdAt: firebase.firestore.FieldValue.serverTimestamp() };
+      const data = { username, email: email || null, phone: user.phoneNumber || null, createdAt: TS(), updatedAt: TS() };
       await db.collection('users').doc(user.uid).set(data, { merge: true });
       try { await user.updateProfile({ displayName: username }); } catch (err) { console.warn('updateProfile failed', err); }
       profile = { username, email: email || null, phone: user.phoneNumber || null };
@@ -1751,13 +1835,64 @@ body.light .toast.err{color:#B91C1C;}
     }
   });
 
+  // ---------- Edit profile ----------
+  const editOverlay = $('profileOverlay');
+  const editError = $('editError');
+  const WHATSAPP_RE = /^\+?\d{8,15}$/;
+  function openEditProfile(){
+    const user = auth.currentUser; if (!user) return;
+    clearError(editError);
+    $('editUsername').value = (profile && profile.username) || user.displayName || '';
+    $('editWhatsapp').value = (profile && profile.whatsapp) || '';
+    const emailInput = $('editEmail');
+    const googleEmail = !isPhoneUser(user) && user.email;
+    emailInput.value = (profile && profile.email) || user.email || '';
+    emailInput.disabled = !!googleEmail;
+    $('editEmailNote').textContent = googleEmail ? '(من حساب Google)' : '(اختياري)';
+    editOverlay.hidden = false;
+    $('editUsername').focus();
+  }
+  function closeEditProfile(){ editOverlay.hidden = true; }
+  $('editProfileBtn').addEventListener('click', openEditProfile);
+  $('editCancelBtn').addEventListener('click', closeEditProfile);
+  editOverlay.addEventListener('click', (e) => { if (e.target === editOverlay) closeEditProfile(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !editOverlay.hidden) closeEditProfile(); });
+  $('editProfileForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearError(editError);
+    const user = auth.currentUser; if (!user) return;
+    const username = cleanUsername($('editUsername').value);
+    const whatsapp = $('editWhatsapp').value.replace(/[\s\-().]/g, '');
+    const email = $('editEmail').value.trim();
+    if (!USERNAME_RE.test(username)){ showError(editError, 'اسم المستخدم يجب أن يكون من 3 إلى 30 حرفاً (حروف وأرقام و _ . - ومسافات).'); $('editUsername').focus(); return; }
+    if (whatsapp && !WHATSAPP_RE.test(whatsapp)){ showError(editError, 'رقم الواتساب غير صحيح، اكتبه بالأرقام فقط، مثال: 0555123456'); $('editWhatsapp').focus(); return; }
+    if (email && !EMAIL_RE.test(email)){ showError(editError, 'صيغة البريد الإلكتروني غير صحيحة، أو اتركه فارغاً.'); $('editEmail').focus(); return; }
+    const patch = { username, whatsapp: whatsapp || null, email: email || null };
+    const btn = $('editSaveBtn');
+    setBusy(btn, true, 'جارٍ الحفظ...');
+    try {
+      await db.collection('users').doc(user.uid).set(Object.assign({}, patch, { updatedAt: TS() }), { merge: true });
+      if (user.displayName !== username){ try { await user.updateProfile({ displayName: username }); } catch (err) { console.warn('updateProfile failed', err); } }
+      profile = Object.assign({}, profile || {}, patch);
+      renderHeaderAccount(user);
+      renderProfile(user);
+      closeEditProfile();
+      toast('تم حفظ التغييرات');
+    } catch (err){
+      console.error('Saving profile changes failed:', err);
+      showError(editError, 'تعذّر حفظ التغييرات الآن، تحقق من اتصالك وحاول مرة أخرى.');
+    } finally {
+      setBusy(btn, false);
+    }
+  });
+
   // ---------- Header account button ----------
   function renderHeaderAccount(user){
     const area = $('accountArea');
     if (user){
       const label = (profile && profile.username) || user.displayName || user.email || '؟';
       area.innerHTML = '<a class="acc-avatar" href="#top" aria-label="حسابي" title="حسابي"></a>';
-      area.firstChild.textContent = String(label).trim().charAt(0).toUpperCase();
+      avatarInto(area.firstChild, label, (profile && profile.photoURL) || user.photoURL);
     } else {
       area.innerHTML = '<button class="acc-btn" id="authOpenBtn" type="button" aria-label="تسجيل الدخول">تسجيل الدخول</button>';
       $('authOpenBtn').addEventListener('click', () => { setState('out'); $('stateOut').scrollIntoView({ behavior: 'smooth', block: 'center' }); const f = $('phoneForm').hidden ? $('otpInput') : (PHONE_LOGIN_ENABLED ? $('phoneInput') : $('googleSignInBtn')); f.focus({ preventScroll: true }); });
@@ -1766,7 +1901,7 @@ body.light .toast.err{color:#B91C1C;}
 
   function renderProfile(user){
     const name = (profile && profile.username) || user.displayName || user.email || formatE164(user.phoneNumber) || '؟';
-    $('sideAvatar').textContent = String(name).trim().charAt(0).toUpperCase();
+    avatarInto($('sideAvatar'), name, (profile && profile.photoURL) || user.photoURL);
     $('sideName').textContent = name;
     const phoneEl = $('sidePhone');
     if (user.phoneNumber){ phoneEl.textContent = formatE164(user.phoneNumber); phoneEl.hidden = false; } else { phoneEl.hidden = true; }
@@ -1823,10 +1958,12 @@ body.light .toast.err{color:#B91C1C;}
     const label = STATUS_LABEL[o.status] || 'قيد المعالجة';
     const ref = '#' + esc(String(o.id).slice(0, 6).toUpperCase());
     let actions = '';
+    const reported = o.customerReport === 'not_received';
     if (group === 'processing'){
       actions = '<div class="order-actions">' +
-        '<button type="button" class="o-btn o-btn-ok" data-act="received" data-id="' + esc(o.id) + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>تم استلام الطلب</button>' +
-        (canCancel(o.status) ? '<button type="button" class="o-btn o-btn-cancel" data-act="cancel" data-id="' + esc(o.id) + '">إلغاء الطلب</button>' : '') +
+        '<button type="button" class="o-btn o-btn-ok" data-act="received" data-id="' + esc(o.id) + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>تم استلام المنتج</button>' +
+        '<button type="button" class="o-btn o-btn-warn" data-act="notreceived" data-id="' + esc(o.id) + '">' + (reported ? 'تواصل معنا عبر واتساب' : 'لم أستلم المنتج') + '</button>' +
+        (canCancel(o.status) ? '<button type="button" class="o-btn o-btn-text" data-act="cancel" data-id="' + esc(o.id) + '">إلغاء الطلب</button>' : '') +
         '</div>';
     }
     return '<div class="order-card' + (group === 'received' ? ' is-done' : '') + (group === 'cancelled' ? ' is-cancelled' : '') + '">' +
@@ -1840,6 +1977,7 @@ body.light .toast.err{color:#B91C1C;}
       '<div class="order-side">' +
         (o.total ? '<div class="order-price">' + esc(o.total) + ' دج</div>' : '') +
         '<span class="order-status' + (group === 'received' ? ' status-done' : '') + (group === 'cancelled' ? ' status-cancelled' : '') + '">' + label + '</span>' +
+        (reported && group === 'processing' ? '<span class="order-flag">⚠ أبلغتَ بعدم الاستلام</span>' : '') +
       '</div>' + actions +
     '</div>';
   }
@@ -1919,28 +2057,59 @@ body.light .toast.err{color:#B91C1C;}
   $('confirmOverlay').addEventListener('click', (e) => { if (e.target === $('confirmOverlay')) closeConfirm(false); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('confirmOverlay').hidden) closeConfirm(false); });
 
+  function whatsappText(order){
+    const date = order.createdAt && order.createdAt.toDate ? order.createdAt.toDate().toLocaleDateString('ar-DZ') : '';
+    return 'مرحباً، لم أستلم منتجي بعد.\n' +
+      'المنتج: ' + order.product + '\n' +
+      'رقم الطلب: #' + String(order.id).slice(0, 6).toUpperCase() + '\n' +
+      (date ? 'تاريخ الطلب: ' + date + '\n' : '') +
+      'الاسم: ' + ((profile && profile.username) || (auth.currentUser && auth.currentUser.displayName) || '');
+  }
+  // The order itself is followed up on WhatsApp: open the chat and copy the order details to paste
+  function contactOnWhatsApp(order){
+    window.open(WHATSAPP_URL, '_blank', 'noopener');
+    try { navigator.clipboard.writeText(whatsappText(order)).then(() => toast('نسخنا تفاصيل طلبك، الصقها في محادثة واتساب')).catch(() => {}); } catch (err) {}
+  }
+
   $('ordersContent').addEventListener('click', async (e) => {
     const btn = e.target.closest('[data-act]');
     if (!btn) return;
     const order = allOrders.find((o) => o.id === btn.dataset.id);
     if (!order) return;
     const act = btn.dataset.act;
+
+    if (act === 'notreceived'){
+      if (order.customerReport === 'not_received'){ contactOnWhatsApp(order); return; }
+      const ok = await askConfirm('لم تستلم المنتج؟', 'سنسجّل أنك لم تستلم «' + order.product + '» بعد، ثم نفتح لك واتساب للتواصل مع فريقنا برقم طلبك.', 'متابعة عبر واتساب', false);
+      if (!ok) return;
+      contactOnWhatsApp(order);
+      try {
+        await db.collection('orders').doc(order.id).update({ customerReport: 'not_received', reportedAt: TS() });
+        order.customerReport = 'not_received';
+        renderOrders();
+      } catch (err){
+        console.error('Saving the report failed:', err);
+        toast('تعذّر تسجيل البلاغ، لكن يمكنك التواصل معنا عبر واتساب.', true);
+      }
+      return;
+    }
+
     let newStatus, ok;
     if (act === 'cancel'){
       ok = await askConfirm('إلغاء هذا الطلب؟', 'سيتم إلغاء طلب «' + order.product + '» ولا يمكن التراجع عن ذلك.', 'نعم، إلغاء الطلب', true);
       newStatus = 'cancelled';
     } else {
-      ok = await askConfirm('تأكيد استلام الطلب', 'اضغط تأكيد فقط بعد أن تستلم اشتراكك «' + order.product + '» وتتأكد من عمله.', 'نعم، تم الاستلام', false);
+      ok = await askConfirm('تأكيد استلام المنتج', 'اضغط تأكيد فقط بعد أن تستلم اشتراكك «' + order.product + '» وتتأكد من عمله.', 'نعم، تم الاستلام', false);
       newStatus = 'received';
     }
     if (!ok) return;
     const card = btn.closest('.order-card');
     card.querySelectorAll('.o-btn').forEach((b) => { b.disabled = true; });
     try {
-      await db.collection('orders').doc(order.id).update({ status: newStatus, statusUpdatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+      await db.collection('orders').doc(order.id).update({ status: newStatus, statusUpdatedAt: TS() });
       order.status = newStatus;
       renderOrders();
-      toast(newStatus === 'cancelled' ? 'تم إلغاء الطلب' : 'تم تأكيد استلام الطلب، شكراً لك!');
+      toast(newStatus === 'cancelled' ? 'تم إلغاء الطلب' : 'تم تأكيد استلام المنتج، شكراً لك!');
     } catch (err){
       console.error('Updating order failed:', err);
       card.querySelectorAll('.o-btn').forEach((b) => { b.disabled = false; });
@@ -1974,7 +2143,7 @@ body.light .toast.err{color:#B91C1C;}
       return;
     }
     let prof = null;
-    try { prof = await loadProfile(user); } catch (err){ console.error('Loading profile failed:', err); }
+    try { prof = await ensureProfile(user); } catch (err){ console.error('Loading profile failed:', err); }
     if (run !== authRun) return;
     profile = prof;
     if (isPhoneUser(user) && !(prof && prof.username)){

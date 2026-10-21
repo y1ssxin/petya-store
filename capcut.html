@@ -2550,9 +2550,9 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
     </div>
   </div>
 </footer>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
 <script>
 
   // ---------- Theme toggle ----------
@@ -2574,12 +2574,13 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
 
   // ---------- Firebase ----------
   const firebaseConfig = {
-    apiKey: "AIzaSyA9WEO0X8H4vRJyxE43Q6d0vG4W9k1o6yE",
+    apiKey: "AIzaSyB59fcv3POq5xS8zc52JYF97Eacw4mO7pA",
     authDomain: "petya-digital-product.firebaseapp.com",
     projectId: "petya-digital-product",
     storageBucket: "petya-digital-product.firebasestorage.app",
-    messagingSenderId: "1076743492107",
-    appId: "1:1076743492107:web:7f1e6e5df6b0c0a6b7f6f7"
+    messagingSenderId: "442610065781",
+    appId: "1:442610065781:web:b203de716d66b1b822b33c",
+    measurementId: "G-V4H5DVLTCT"
   };
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
@@ -2915,7 +2916,7 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
     function fillForm(user){
       const nm = (account && account.username) || user.displayName || '';
       if (nm && !nameInput.dataset.touched) nameInput.value = nm;
-      const ph = localPhone(user.phoneNumber);
+      const ph = (account && account.whatsapp) || localPhone(user.phoneNumber);
       if (ph && !phoneInput.dataset.touched) phoneInput.value = ph;
     }
     function lock(kind){

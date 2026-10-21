@@ -9,22 +9,35 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // ---------- ملف العميل: اسم المستخدم + البريد الاختياري ----------
+    // ---------- ملف العميل (الاسم، البريد، واتساب، صورة Google) ----------
     match /users/{uid} {
       allow read: if request.auth != null && request.auth.uid == uid;
       allow create, update: if request.auth != null && request.auth.uid == uid
-        && request.resource.data.keys().hasOnly(['username', 'email', 'phone', 'createdAt'])
+        && request.resource.data.keys().hasOnly(['username', 'email', 'phone', 'whatsapp', 'photoURL', 'createdAt', 'updatedAt'])
         && request.resource.data.username is string
         && request.resource.data.username.size() >= 3
         && request.resource.data.username.size() <= 30
-        && (request.resource.data.email == null
+        && (request.resource.data.get('email', null) == null
             || (request.resource.data.email is string && request.resource.data.email.size() <= 120))
-        && request.resource.data.phone == request.auth.token.get('phone_number', null);
+        && (request.resource.data.get('whatsapp', null) == null
+            || (request.resource.data.whatsapp is string && request.resource.data.whatsapp.size() <= 20))
+        && (request.resource.data.get('photoURL', null) == null
+            || (request.resource.data.photoURL is string && request.resource.data.photoURL.size() <= 600))
+        // رقم الدخول بالهاتف لا يُكتب إلا كما هو في حساب Firebase
+        && request.resource.data.get('phone', null) == request.auth.token.get('phone_number', null);
       allow delete: if false;
     }
 
     // ---------- الطلبات ----------
     match /orders/{orderId} {
+
+      // مالك الطلب: حساب جديد (uid) أو طلب قديم مرتبط ببريد Google
+      function isOwner() {
+        return request.auth != null
+          && (resource.data.get('uid', null) == request.auth.uid
+              || (request.auth.token.get('email', null) != null
+                  && resource.data.get('accountEmail', null) == request.auth.token.get('email', null)));
+      }
 
       // لا يُنشأ طلب إلا من عميل مسجّل الدخول، وبحالة "new" فقط
       allow create: if request.auth != null
@@ -36,21 +49,25 @@ service cloud.firestore {
         && request.resource.data.name is string && request.resource.data.name.size() <= 100
         && request.resource.data.phone is string && request.resource.data.phone.size() <= 30;
 
-      // العميل يقرأ طلباته فقط (الحساب الجديد عبر uid، والطلبات القديمة عبر بريد Google)
+      // العميل يقرأ طلباته فقط
       allow read: if request.auth != null && resource.data.uid == request.auth.uid;
       allow read: if request.auth != null && request.auth.token.get('email', null) != null
                   && resource.data.accountEmail == request.auth.token.get('email', null);
 
-      // العميل يغيّر "الحالة" فقط: إلغاء (قبل تفعيل الطلب) أو "تم الاستلام"
-      allow update: if request.auth != null
-        && (resource.data.get('uid', null) == request.auth.uid
-            || (request.auth.token.get('email', null) != null
-                && resource.data.get('accountEmail', null) == request.auth.token.get('email', null)))
+      // (1) تغيير الحالة: إلغاء (قبل تفعيل الطلب) أو "تم استلام المنتج"
+      allow update: if isOwner()
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'statusUpdatedAt'])
         && request.resource.data.statusUpdatedAt == request.time
         && ((request.resource.data.status == 'cancelled' && resource.data.status in ['new', 'pending'])
             || (request.resource.data.status == 'received'
                 && resource.data.status in ['new', 'pending', 'activated', 'done', 'completed']));
+
+      // (2) بلاغ "لم أستلم المنتج": يسجّل البلاغ فقط ولا يغيّر الحالة
+      allow update: if isOwner()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['customerReport', 'reportedAt'])
+        && request.resource.data.customerReport == 'not_received'
+        && request.resource.data.reportedAt == request.time
+        && resource.data.status in ['new', 'pending', 'activated', 'done', 'completed'];
 
       allow delete: if false;
 
