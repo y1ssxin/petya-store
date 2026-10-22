@@ -2566,6 +2566,7 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
   const auth = firebase.auth();
   const googleProvider = new firebase.auth.GoogleAuthProvider();
   const db = firebase.firestore();
+  try { db.settings({ experimentalAutoDetectLongPolling: true, ignoreUndefinedProperties: true }); } catch (e) { console.warn('Firestore settings:', e); }
 
   // ---------- Thank-you overlay ----------
   const thankyouOverlay = document.getElementById('thankyouOverlay');

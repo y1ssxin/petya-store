@@ -2579,6 +2579,7 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
   const auth = firebase.auth();
   const googleProvider = new firebase.auth.GoogleAuthProvider();
   const db = firebase.firestore();
+  try { db.settings({ experimentalAutoDetectLongPolling: true, ignoreUndefinedProperties: true }); } catch (e) { console.warn('Firestore settings:', e); }
 
   // ---------- Thank-you overlay ----------
   const thankyouOverlay = document.getElementById('thankyouOverlay');
@@ -2899,6 +2900,10 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
     const here = location.pathname.split('/').pop() || 'index.html';
     if (gateBtn) gateBtn.href = 'account.html?next=' + encodeURIComponent(here);
 
+    const withTimeout = (promise, ms) => new Promise((resolve, reject) => {
+      const t = setTimeout(() => reject({ code: 'timeout' }), ms);
+      promise.then((v) => { clearTimeout(t); resolve(v); }, (e) => { clearTimeout(t); reject(e); });
+    });
     const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     const localPhone = (p) => { const m = String(p || '').replace(/\D/g, '').match(/^213([567]\d{8})$/); return m ? '0' + m[1] : ''; };
     const showErr = (msg) => { if (!errBox) return; errBox.textContent = msg || ''; errBox.hidden = !msg; };
@@ -2925,9 +2930,10 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
       showErr('');
       if (!user){ account = null; lock('login'); return; }
       fillForm(user);
+      if (!user.phoneNumber) poForm.dataset.auth = 'in';     // Google: no need to wait for Firestore
       let status = 'ok';
       try {
-        const snap = await db.collection('users').doc(user.uid).get();
+        const snap = await withTimeout(db.collection('users').doc(user.uid).get(), 6000);
         account = snap.exists ? snap.data() : null;
         if (user.phoneNumber && !(account && account.username)) status = 'missing';
       } catch (err){ console.error('Loading profile failed:', err); account = null; }
@@ -2951,6 +2957,8 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
       const original = submitBtn.textContent;
       submitBtn.disabled = true;
       submitBtn.textContent = 'جارٍ إرسال الطلب...';
+      // slow connection: the order is still being sent, so keep the button locked (no double orders)
+      const slowTimer = setTimeout(() => showErr('الاتصال بطيء، ما زال طلبك يُرسَل. لا تُعد الضغط، وانتظر قليلاً.'), 12000);
       try {
         await db.collection('orders').add({
           name,
@@ -2967,12 +2975,15 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
       } catch (err){
+        clearTimeout(slowTimer);
         console.error('Failed to save order:', err);
-        showErr('تعذّر إرسال طلبك الآن، تحقق من اتصالك بالإنترنت وحاول مرة أخرى.');
+        showErr('تعذّر إرسال طلبك الآن، تحقق من اتصالك بالإنترنت وحاول مرة أخرى.' + (err && err.code ? ' (' + err.code + ')' : ''));
         submitBtn.disabled = false;
         submitBtn.textContent = original;
         return;
       }
+      clearTimeout(slowTimer);
+      showErr('');
       tyName.textContent = name;
       tySummary.innerHTML = `
         <div><b>المنتج:</b> ${esc(PRODUCT_NAME)}</div>

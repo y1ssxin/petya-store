@@ -1213,6 +1213,11 @@ body.light .order-flag{color:#B45309;}
   .order-actions .o-btn-text{flex:1 1 100%;margin:0;padding:6px;text-align:center;}
 }
 
+.err-code{display:block;margin-top:6px;font-size:12px;opacity:.7;font-family:ui-monospace,Menlo,Consolas,monospace;}
+.state-card .err-code{margin-top:4px;}
+.orders-note{margin:0 0 12px;padding:10px 14px;border-radius:12px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);color:#FBBF24;font-size:13px;}
+body.light .orders-note{color:#B45309;}
+
 </style>
 </head>
 <body>
@@ -1534,6 +1539,12 @@ body.light .order-flag{color:#B45309;}
   auth.languageCode = 'ar';
   const googleProvider = new firebase.auth.GoogleAuthProvider();
   const db = firebase.firestore();
+  try { db.settings({ experimentalAutoDetectLongPolling: true, ignoreUndefinedProperties: true }); } catch (e) { console.warn('Firestore settings:', e); }
+  const withTimeout = (promise, ms, code) => new Promise((resolve, reject) => {
+    const t = setTimeout(() => reject({ code: code || 'timeout' }), ms);
+    promise.then((v) => { clearTimeout(t); resolve(v); }, (e) => { clearTimeout(t); reject(e); });
+  });
+  const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // ============================================================
   //  مفتاح الدخول برقم الهاتف:
@@ -2008,14 +2019,21 @@ body.light .order-flag{color:#B45309;}
 
   async function fetchOrders(user){
     const jobs = [db.collection('orders').where('uid', '==', user.uid).get()];
-    // Orders made before phone accounts existed were tied to the Google e-mail
+    // Orders made before the new accounts were tied to the Google e-mail
     if (user.email) jobs.push(db.collection('orders').where('accountEmail', '==', user.email).get());
     const results = await Promise.allSettled(jobs);
-    if (results.every((r) => r.status === 'rejected')) throw results[0].reason;
+    const failed = results.filter((r) => r.status === 'rejected');
+    if (failed.length === results.length) throw failed[0].reason;
     const map = new Map();
     results.forEach((r) => { if (r.status === 'fulfilled') r.value.docs.forEach((d) => map.set(d.id, Object.assign({ id: d.id }, d.data()))); });
-    return Array.from(map.values()).sort((a, b) => millis(b) - millis(a));
+    failed.forEach((f) => console.warn('One orders query failed:', f.reason));
+    return { orders: Array.from(map.values()).sort((a, b) => millis(b) - millis(a)), warn: failed.length ? (failed[0].reason && failed[0].reason.code) || 'error' : null };
   }
+  const errorCardHTML = (code) =>
+    '<div class="state-card"><div class="state-icon">' + receiptIcon + '</div><h3>تعذّر تحميل الطلبات</h3>' +
+    '<p>' + (code === 'timeout' ? 'الاتصال بالخادم بطيء حالياً.' : 'حدث خطأ أثناء الاتصال بالخادم.') + ' يمكنك إعادة المحاولة.</p>' +
+    '<button type="button" class="btn btn-primary" data-act="retry">إعادة المحاولة</button>' +
+    '<span class="err-code" dir="ltr">' + esc(code || 'error') + '</span></div>';
 
   function loadOrders(user){
     const request = ++ordersRequest;
@@ -2024,14 +2042,17 @@ body.light .order-flag{color:#B45309;}
     ['statTotal', 'statPending', 'statDone'].forEach((id) => { $(id).textContent = '—'; });
     $('ordersSub').textContent = '';
     $('ordersContent').innerHTML = skeletonHTML();
-    fetchOrders(user).then((orders) => {
+    withTimeout(fetchOrders(user), 12000, 'timeout').then((res) => {
       if (request !== ordersRequest) return;
-      allOrders = orders;
+      allOrders = res.orders;
       renderOrders();
+      if (res.warn){
+        $('ordersContent').insertAdjacentHTML('afterbegin', '<p class="orders-note">تعذّر تحميل بعض الطلبات حالياً <span class="err-code" dir="ltr">' + esc(res.warn) + '</span></p>');
+      }
     }).catch((err) => {
       if (request !== ordersRequest) return;
       console.error('Failed to load orders:', err);
-      $('ordersContent').innerHTML = stateCardHTML('تعذّر تحميل الطلبات', 'حدث خطأ أثناء الاتصال بالخادم، حاول تحديث الصفحة بعد قليل.', false);
+      $('ordersContent').innerHTML = errorCardHTML(err && err.code);
     });
   }
 
@@ -2074,6 +2095,7 @@ body.light .order-flag{color:#B45309;}
   $('ordersContent').addEventListener('click', async (e) => {
     const btn = e.target.closest('[data-act]');
     if (!btn) return;
+    if (btn.dataset.act === 'retry'){ if (auth.currentUser) loadOrders(auth.currentUser); return; }
     const order = allOrders.find((o) => o.id === btn.dataset.id);
     if (!order) return;
     const act = btn.dataset.act;
@@ -2142,11 +2164,29 @@ body.light .order-flag{color:#B45309;}
       if (!confirmation) showStep('phone');
       return;
     }
+
+    // Google accounts: no need to wait for Firestore, show the page now
+    if (!isPhoneUser(user)){
+      const profileJob = ensureProfile(user).then((p) => {
+        if (run !== authRun) return;
+        profile = p;
+        renderHeaderAccount(user);
+        renderProfile(user);
+      }).catch((err) => console.error('Loading profile failed:', err));
+      // About to go back to the product page: give the profile write a moment to finish first
+      if (justSignedIn && nextTarget) await Promise.race([profileJob, delay(2500)]);
+      if (run !== authRun) return;
+      enterAccount(user);
+      return;
+    }
+
+    // Phone accounts: we need to know whether the username step is done (but never wait more than 5 s)
     let prof = null;
-    try { prof = await ensureProfile(user); } catch (err){ console.error('Loading profile failed:', err); }
+    let failed = false;
+    try { prof = await withTimeout(loadProfile(user), 5000, 'timeout'); } catch (err){ failed = true; console.error('Loading profile failed:', err); }
     if (run !== authRun) return;
     profile = prof;
-    if (isPhoneUser(user) && !(prof && prof.username)){
+    if (!failed && !(prof && prof.username)){
       renderHeaderAccount(user);
       $('profilePhone').textContent = formatE164(user.phoneNumber);
       setState('profile');
