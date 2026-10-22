@@ -1618,6 +1618,10 @@ body.light .orders-note{color:#B45309;}
   const nextParam = new URLSearchParams(location.search).get('next');
   const nextTarget = nextParam && /^[a-z0-9-]+\.html$/i.test(nextParam) ? nextParam : null;
   let justSignedIn = false;
+  // Coming from the "order received" window: ?order=<id>
+  const orderParamRaw = new URLSearchParams(location.search).get('order');
+  const orderParam = orderParamRaw && /^[A-Za-z0-9]{8,40}$/.test(orderParamRaw) ? orderParamRaw : null;
+  const localOrderIds = (uid) => { try { return JSON.parse(localStorage.getItem('petya-orders:' + uid) || '[]').filter((x) => typeof x === 'string'); } catch (e) { return []; } };
 
   // ---------- Algerian phone numbers ----------
   function normalizeDZ(raw){
@@ -2023,11 +2027,34 @@ body.light .orders-note{color:#B45309;}
     if (user.email) jobs.push(db.collection('orders').where('accountEmail', '==', user.email).get());
     const results = await Promise.allSettled(jobs);
     const failed = results.filter((r) => r.status === 'rejected');
-    if (failed.length === results.length) throw failed[0].reason;
     const map = new Map();
     results.forEach((r) => { if (r.status === 'fulfilled') r.value.docs.forEach((d) => map.set(d.id, Object.assign({ id: d.id }, d.data()))); });
+
+    // Orders this device placed, plus the one we were just sent here for: look each up by its id,
+    // so they show even if the list query misses them
+    const wanted = [];
+    if (orderParam) wanted.push(orderParam);
+    localOrderIds(user.uid).forEach((id) => { if (!wanted.includes(id)) wanted.push(id); });
+    const extra = wanted.filter((id) => !map.has(id)).slice(0, 10);
+    const byId = await Promise.allSettled(extra.map((id) => db.collection('orders').doc(id).get()));
+    let missing = null;
+    byId.forEach((r, i) => {
+      const id = extra[i];
+      if (r.status === 'fulfilled' && r.value.exists){
+        const d = r.value.data();
+        if (d.uid === user.uid || (user.email && d.accountEmail === user.email)) map.set(id, Object.assign({ id }, d));
+      } else if (id === orderParam){
+        missing = { id, code: r.status === 'rejected' ? ((r.reason && r.reason.code) || 'error') : 'not-found' };
+      }
+    });
+
+    if (failed.length === results.length && map.size === 0 && !missing) throw failed[0].reason;
     failed.forEach((f) => console.warn('One orders query failed:', f.reason));
-    return { orders: Array.from(map.values()).sort((a, b) => millis(b) - millis(a)), warn: failed.length ? (failed[0].reason && failed[0].reason.code) || 'error' : null };
+    return {
+      orders: Array.from(map.values()).sort((a, b) => millis(b) - millis(a)),
+      warn: failed.length ? (failed[0].reason && failed[0].reason.code) || 'error' : null,
+      missing
+    };
   }
   const errorCardHTML = (code) =>
     '<div class="state-card"><div class="state-icon">' + receiptIcon + '</div><h3>تعذّر تحميل الطلبات</h3>' +
@@ -2046,8 +2073,13 @@ body.light .orders-note{color:#B45309;}
       if (request !== ordersRequest) return;
       allOrders = res.orders;
       renderOrders();
-      if (res.warn){
+      if (res.missing){
+        $('ordersContent').insertAdjacentHTML('afterbegin', '<p class="orders-note">لم نتمكن من العثور على طلبك <b dir="ltr">#' + esc(res.missing.id.slice(0, 6).toUpperCase()) + '</b> على الخادم. تواصل معنا عبر واتساب وأرسل رقم الطلب. <span class="err-code" dir="ltr">' + esc(res.missing.code) + '</span></p>');
+      } else if (res.warn){
         $('ordersContent').insertAdjacentHTML('afterbegin', '<p class="orders-note">تعذّر تحميل بعض الطلبات حالياً <span class="err-code" dir="ltr">' + esc(res.warn) + '</span></p>');
+      }
+      if (orderParam && !res.missing && allOrders.some((o) => o.id === orderParam)){
+        toast('تم استلام طلبك #' + orderParam.slice(0, 6).toUpperCase());
       }
     }).catch((err) => {
       if (request !== ordersRequest) return;

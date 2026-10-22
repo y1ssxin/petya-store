@@ -1609,7 +1609,19 @@ form[data-auth="out"] .field,form[data-auth="out"] .pm-form-actions{display:none
 form[data-auth="checking"] .field,form[data-auth="checking"] .pm-form-actions{opacity:.5;pointer-events:none;}
 .po-error{margin:0 0 12px;padding:10px 14px;border-radius:12px;background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.32);color:#F87171;font-size:13.5px;line-height:1.8;}
 body.light .po-error{color:#B91C1C;}
-.ty-track{margin:16px 0 18px;font-size:13.5px;line-height:1.9;color:var(--text-dim);}
+.ty-track{margin:10px 0 12px;font-size:13px;line-height:1.9;color:var(--text-dim);}
+.ty-order{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;margin:14px 0 2px;padding:9px 12px;border-radius:14px;background:var(--accent-soft);border:1px dashed var(--border-strong);}
+.ty-order-label{font-size:13px;color:var(--text-dim);}
+.ty-order-no{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:19px;font-weight:800;letter-spacing:.1em;color:var(--text);}
+.ty-copy{padding:5px 12px;border-radius:999px;border:1px solid var(--border-strong);background:transparent;color:var(--text-dim);font-size:12px;font-weight:700;cursor:pointer;}
+.ty-copy:hover{background:var(--hover-tint-strong);color:var(--text);}
+/* both buttons: same size, same shape, stacked */
+.thankyou-actions{flex-direction:column;flex-wrap:nowrap;gap:12px;}
+.thankyou-actions .ty-btn{width:100%;flex:none;min-width:0;min-height:52px;margin:0;padding:0 22px;border-radius:999px;font-size:15px;font-weight:700;line-height:1.2;justify-content:center;text-align:center;}
+.thankyou-overlay{overflow-y:auto;align-items:flex-start;-webkit-overflow-scrolling:touch;}
+.thankyou-card{margin:auto;padding:36px 32px 30px;}
+.thankyou-summary{margin:14px 0 16px;}
+@media (max-width:480px){.thankyou-card{padding:30px 20px 24px;}.ty-order-no{font-size:17px;}}
 </style>
 </head>
 <body>
@@ -2484,6 +2496,11 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
       </div>
       <h3 id="thankyouTitle">تم استلام طلبك بنجاح!</h3>
       <p>شكراً لك <span class="ty-name" id="tyName"></span>، فريقنا سيتواصل معك في أقرب وقت لإتمام تفعيل اشتراكك.</p>
+      <div class="ty-order" id="tyOrder" hidden>
+        <span class="ty-order-label">رقم طلبك</span>
+        <b class="ty-order-no" id="tyOrderNo" dir="ltr"></b>
+        <button type="button" class="ty-copy" id="tyCopy">نسخ</button>
+      </div>
       <div class="thankyou-summary" id="tySummary"></div>
       <p class="ty-track">يمكنك متابعة حالة طلبك أو إلغاءه من صفحة «حسابي» ضمن قسم «قيد المعالجة».</p>
       <div class="pm-important-note" style="text-align:right;">
@@ -2491,8 +2508,8 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
         <p>يُرجى التقاط صورة (Screenshot) للنافذة وإرسالها عبر واتساب لتأكيد الطلب وتسريع عملية المراجعة والتجهيز. شكرًا لتعاونكم. 🤝</p>
       </div>
       <div class="thankyou-actions">
-        <a href="https://wa.me/message/MNQ3N2PJXGKBO1" target="_blank" rel="noopener" class="btn btn-gold" style="width:100%;justify-content:center;">اكد طلبك الآن عبر واتساب</a>
-        <a href="account.html#ordersPanel" class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:10px;">تابع طلبك في حسابي</a>
+        <a href="https://wa.me/message/MNQ3N2PJXGKBO1" target="_blank" rel="noopener" class="btn btn-gold ty-btn">اكد طلبك الآن عبر واتساب</a>
+        <a href="account.html#ordersPanel" class="btn btn-ghost ty-btn" id="tyTrack">تابع طلبك في حسابي</a>
       </div>
     </div>
   </div>
@@ -2916,6 +2933,26 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
     phoneInput.addEventListener('input', () => { phoneInput.dataset.touched = '1'; });
 
     let account = null;          // users/{uid}
+
+    const tyOrder = document.getElementById('tyOrder');
+    const tyOrderNo = document.getElementById('tyOrderNo');
+    const tyTrack = document.getElementById('tyTrack');
+    const tyCopy = document.getElementById('tyCopy');
+    let lastOrderNo = '';
+    if (tyCopy) tyCopy.addEventListener('click', () => {
+      try { navigator.clipboard.writeText(lastOrderNo); } catch (e) {}
+      tyCopy.textContent = 'تم النسخ';
+      setTimeout(() => { tyCopy.textContent = 'نسخ'; }, 1800);
+    });
+    // remember my orders on this device, so the account page can always find them by id
+    function rememberOrder(uid, id){
+      try {
+        const key = 'petya-orders:' + uid;
+        const list = JSON.parse(localStorage.getItem(key) || '[]').filter((x) => x !== id);
+        list.unshift(id);
+        localStorage.setItem(key, JSON.stringify(list.slice(0, 30)));
+      } catch (e) {}
+    }
     function fillForm(user){
       const nm = (account && account.username) || user.displayName || '';
       if (nm && !nameInput.dataset.touched) nameInput.value = nm;
@@ -2964,8 +3001,9 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
       submitBtn.textContent = 'جارٍ إرسال الطلب...';
       // slow connection: the order is still being sent, so keep the button locked (no double orders)
       const slowTimer = setTimeout(() => showErr('الاتصال بطيء، ما زال طلبك يُرسَل. لا تُعد الضغط، وانتظر قليلاً.'), 12000);
+      let orderRef = null;
       try {
-        await db.collection('orders').add({
+        orderRef = await db.collection('orders').add({
           name,
           phone,
           product: PRODUCT_NAME,
@@ -2989,6 +3027,11 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
       }
       clearTimeout(slowTimer);
       showErr('');
+      lastOrderNo = '#' + String(orderRef.id).slice(0, 6).toUpperCase();
+      tyOrderNo.textContent = lastOrderNo;
+      tyOrder.hidden = false;
+      if (tyTrack) tyTrack.href = 'account.html?order=' + encodeURIComponent(orderRef.id) + '#ordersPanel';
+      rememberOrder(user.uid, orderRef.id);
       tyName.textContent = name;
       tySummary.innerHTML = `
         <div><b>المنتج:</b> ${esc(PRODUCT_NAME)}</div>
