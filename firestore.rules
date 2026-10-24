@@ -51,8 +51,7 @@ service cloud.firestore {
 
       // العميل يقرأ طلباته فقط
       allow read: if request.auth != null && resource.data.uid == request.auth.uid;
-      allow read: if request.auth != null && request.auth.token.get('email', null) != null
-                  && resource.data.accountEmail == request.auth.token.get('email', null);
+      allow read: if request.auth != null && resource.data.accountEmail == request.auth.token.email;
 
       // (1) تغيير الحالة: إلغاء (قبل تفعيل الطلب) أو "تم استلام المنتج"
       allow update: if isOwner()

@@ -1622,6 +1622,14 @@ body.light .po-error{color:#B91C1C;}
 .thankyou-card{margin:auto;padding:36px 32px 30px;}
 .thankyou-summary{margin:14px 0 16px;}
 @media (max-width:480px){.thankyou-card{padding:30px 20px 24px;}.ty-order-no{font-size:17px;}}
+/* order window: copy -> WhatsApp (locked until copied, then glows) -> account */
+.thankyou-actions .ty-btn.is-locked{opacity:.4;filter:grayscale(.5);pointer-events:none;cursor:not-allowed;}
+.thankyou-actions .ty-btn.is-ready{animation:tyGlow 1.8s ease-in-out infinite;}
+@keyframes tyGlow{0%,100%{box-shadow:0 8px 22px rgba(245,190,60,.25);}50%{box-shadow:0 0 0 6px rgba(245,190,60,.2),0 0 30px rgba(245,190,60,.6);}}
+@media (prefers-reduced-motion:reduce){.thankyou-actions .ty-btn.is-ready{animation:none;box-shadow:0 0 0 3px rgba(245,190,60,.5);}}
+.thankyou-actions .ty-btn.is-done{background:linear-gradient(135deg,#10B981,#059669);color:#fff;border-color:transparent;}
+.ty-hint{margin:-4px 0 0;text-align:center;font-size:12.5px;color:var(--text-faint);}
+.ty-fallback{width:100%;min-height:104px;padding:10px 12px;border-radius:12px;border:1px solid var(--border-strong);background:var(--bg-elev);color:var(--text);font-size:13px;line-height:1.8;resize:none;}
 </style>
 </head>
 <body>
@@ -2498,16 +2506,17 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
       <div class="ty-order" id="tyOrder" hidden>
         <span class="ty-order-label">رقم طلبك</span>
         <b class="ty-order-no" id="tyOrderNo" dir="ltr"></b>
-        <button type="button" class="ty-copy" id="tyCopy">نسخ</button>
       </div>
       <div class="thankyou-summary" id="tySummary"></div>
-      <p class="ty-track">يمكنك متابعة حالة طلبك أو إلغاءه من صفحة «حسابي» ضمن قسم «قيد المعالجة».</p>
       <div class="pm-important-note" style="text-align:right;">
         <strong>⚠️ ملاحظة هامة</strong>
-        <p>يُرجى التقاط صورة (Screenshot) للنافذة وإرسالها عبر واتساب لتأكيد الطلب وتسريع عملية المراجعة والتجهيز. شكرًا لتعاونكم. 🤝</p>
+        <p>يتم استلام الطلبات عبر واتساب فقط. اضغط أولًا على «نسخ معلومات الطلب»، ثم تواصل معنا عبر واتساب والصق المعلومات في المحادثة لمتابعة طلبك.</p>
       </div>
       <div class="thankyou-actions">
-        <a href="https://wa.me/message/MNQ3N2PJXGKBO1" target="_blank" rel="noopener" class="btn btn-gold ty-btn">اكد طلبك الآن عبر واتساب</a>
+        <button type="button" class="btn btn-primary ty-btn" id="tyCopyInfo">نسخ معلومات الطلب</button>
+        <a href="https://wa.me/message/MNQ3N2PJXGKBO1" target="_blank" rel="noopener" class="btn btn-gold ty-btn is-locked" id="tyWhatsapp" aria-disabled="true" tabindex="-1">تابع طلبك عبر واتساب</a>
+        <p class="ty-hint" id="tyHint">زر واتساب يُفعَّل بعد نسخ معلومات الطلب</p>
+        <textarea class="ty-fallback" id="tyFallback" readonly hidden aria-label="معلومات الطلب"></textarea>
         <a href="account.html#ordersPanel" class="btn btn-ghost ty-btn" id="tyTrack">تابع طلبك في حسابي</a>
       </div>
     </div>
@@ -2936,13 +2945,45 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
     const tyOrder = document.getElementById('tyOrder');
     const tyOrderNo = document.getElementById('tyOrderNo');
     const tyTrack = document.getElementById('tyTrack');
-    const tyCopy = document.getElementById('tyCopy');
+    const tyCopyInfo = document.getElementById('tyCopyInfo');
+    const tyWhatsapp = document.getElementById('tyWhatsapp');
+    const tyHint = document.getElementById('tyHint');
+    const tyFallback = document.getElementById('tyFallback');
     let lastOrderNo = '';
-    if (tyCopy) tyCopy.addEventListener('click', () => {
-      try { navigator.clipboard.writeText(lastOrderNo); } catch (e) {}
-      tyCopy.textContent = 'تم النسخ';
-      setTimeout(() => { tyCopy.textContent = 'نسخ'; }, 1800);
+    let orderInfo = '';
+    async function copyText(text){
+      try { if (navigator.clipboard && navigator.clipboard.writeText){ await navigator.clipboard.writeText(text); return true; } } catch (e) {}
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+        document.body.appendChild(ta); ta.select();
+        const ok = document.execCommand('copy'); ta.remove(); return ok;
+      } catch (e) { return false; }
+    }
+    // WhatsApp is locked until the customer has copied the order details
+    function resetShare(){
+      tyCopyInfo.textContent = 'نسخ معلومات الطلب';
+      tyCopyInfo.classList.remove('is-done');
+      tyWhatsapp.classList.add('is-locked');
+      tyWhatsapp.classList.remove('is-ready');
+      tyWhatsapp.setAttribute('aria-disabled', 'true');
+      tyWhatsapp.tabIndex = -1;
+      tyHint.textContent = 'زر واتساب يُفعَّل بعد نسخ معلومات الطلب';
+      tyFallback.hidden = true;
+    }
+    tyCopyInfo.addEventListener('click', async () => {
+      if (!orderInfo) return;
+      const ok = await copyText(orderInfo);
+      tyCopyInfo.textContent = ok ? '✓ تم نسخ معلومات الطلب' : 'نسخ معلومات الطلب';
+      tyCopyInfo.classList.toggle('is-done', ok);
+      if (!ok){ tyFallback.value = orderInfo; tyFallback.hidden = false; tyFallback.focus(); tyFallback.select(); }
+      tyWhatsapp.classList.remove('is-locked');
+      tyWhatsapp.classList.add('is-ready');
+      tyWhatsapp.setAttribute('aria-disabled', 'false');
+      tyWhatsapp.tabIndex = 0;
+      tyHint.textContent = ok ? 'تم النسخ. افتح واتساب والصق المعلومات في المحادثة' : 'انسخ المعلومات أعلاه يدويًا ثم افتح واتساب';
     });
+    tyWhatsapp.addEventListener('click', (e) => { if (tyWhatsapp.classList.contains('is-locked')) e.preventDefault(); });
     // remember my orders on this device, so the account page can always find them by id
     function rememberOrder(uid, id){
       try {
@@ -3031,6 +3072,8 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
       tyOrder.hidden = false;
       if (tyTrack) tyTrack.href = 'account.html?order=' + encodeURIComponent(orderRef.id) + '#ordersPanel';
       rememberOrder(user.uid, orderRef.id);
+      orderInfo = ['طلب جديد — Petya Digital Store', 'الاسم: ' + name, 'رقم الطلب: ' + lastOrderNo, 'الاشتراك: ' + PRODUCT_NAME, duration ? 'المدة: ' + duration : null].filter(Boolean).join('\n');
+      resetShare();
       tyName.textContent = name;
       tySummary.innerHTML = `
         <div><b>المنتج:</b> ${esc(PRODUCT_NAME)}</div>
