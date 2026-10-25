@@ -1619,9 +1619,59 @@ body.light .po-error{color:#B91C1C;}
 .thankyou-actions{flex-direction:column;flex-wrap:nowrap;gap:12px;}
 .thankyou-actions .ty-btn{width:100%;flex:none;min-width:0;min-height:52px;margin:0;padding:0 22px;border-radius:999px;font-size:15px;font-weight:700;line-height:1.2;justify-content:center;text-align:center;}
 .thankyou-overlay{overflow-y:auto;align-items:flex-start;-webkit-overflow-scrolling:touch;}
-.thankyou-card{margin:auto;padding:36px 32px 30px;}
 .thankyou-summary{margin:14px 0 16px;}
-@media (max-width:480px){.thankyou-card{padding:30px 20px 24px;}.ty-order-no{font-size:17px;}}
+/* ===== wide order window: header row + two columns, fits the screen without scrolling ===== */
+.thankyou-card.ty-wide{width:min(960px,94vw);max-width:none;margin:auto;padding:28px 34px 26px;text-align:right;}
+.ty-wide .ty-head{display:flex;align-items:center;gap:18px;margin:0 0 18px;padding:0 0 16px;border-bottom:1px solid var(--border);}
+.ty-wide .thankyou-icon{width:64px;height:64px;margin:0;flex-shrink:0;}
+.ty-wide .thankyou-icon svg{width:30px;height:30px;}
+.ty-wide .ty-head h3{margin:0 0 4px;font-size:25px;line-height:1.3;}
+.ty-wide .ty-head p{margin:0;font-size:14.5px;line-height:1.8;}
+.ty-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:22px;align-items:stretch;}
+.ty-col{display:flex;flex-direction:column;gap:12px;min-width:0;}
+.ty-wide .ty-order{margin:0;padding:10px 14px;}
+.ty-wide .thankyou-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;margin:0;padding:14px 16px;}
+.ty-wide .thankyou-summary > div{margin:0;font-size:14px;}
+.ty-wide .pm-important-note{margin:0;padding:14px 16px;}
+.ty-wide .pm-important-note p{margin:6px 0 0;font-size:13.5px;line-height:1.85;}
+.ty-col-actions{justify-content:center;}
+.ty-wide .thankyou-actions{margin:0;padding:0;justify-content:center;}
+@media (max-width:860px){
+  .ty-grid{grid-template-columns:1fr;gap:12px;}
+  .ty-col-actions{justify-content:flex-start;}
+}
+@media (max-width:640px){
+  .thankyou-card.ty-wide{width:94vw;padding:16px 14px 14px;}
+  .ty-wide .ty-head{gap:12px;margin-bottom:10px;padding-bottom:10px;}
+  .ty-wide .thankyou-icon{width:46px;height:46px;}
+  .ty-wide .thankyou-icon svg{width:22px;height:22px;}
+  .ty-wide .ty-head h3{font-size:19px;margin-bottom:2px;}
+  .ty-wide .ty-head p{font-size:12.5px;line-height:1.65;}
+  .ty-wide .ty-order{padding:7px 12px;}
+  .ty-wide .ty-order-no{font-size:16px;}
+  .ty-wide .thankyou-summary{padding:10px 12px;gap:4px 12px;}
+  .ty-wide .thankyou-summary > div{font-size:12.5px;}
+  .ty-wide .pm-important-note{padding:10px 12px;}
+  .ty-wide .pm-important-note strong{font-size:13px;}
+  .ty-wide .pm-important-note p{font-size:12px;line-height:1.7;margin-top:4px;}
+  .ty-col{gap:8px;}
+  .ty-wide .thankyou-actions{gap:8px;}
+  .thankyou-actions .ty-btn{min-height:44px;font-size:14px;}
+  .ty-hint{font-size:11.5px;margin:-2px 0 0;}
+}
+/* very small / short phones: trim the least important text so everything is visible */
+@media (max-width:640px) and (max-height:720px){
+  .thankyou-card.ty-wide{padding:12px 12px 10px;}
+  .ty-wide .ty-head{margin-bottom:8px;padding-bottom:8px;}
+  .ty-wide .ty-head p{display:none;}
+  .ty-wide .thankyou-icon{width:40px;height:40px;}
+  .ty-wide .pm-important-note p{font-size:11.5px;line-height:1.6;}
+  .thankyou-actions .ty-btn{min-height:42px;}
+  .ty-col,.ty-wide .thankyou-actions{gap:6px;}
+}
+.thankyou-card.ty-wide{box-sizing:border-box;}
+.ty-wide .ty-head-text{padding-inline-end:38px;}
+@media (max-width:640px) and (max-height:660px){.ty-hint{display:none;}}
 /* order window: copy -> WhatsApp (locked until copied, then glows) -> account */
 .thankyou-actions .ty-btn.is-locked{opacity:.4;filter:grayscale(.5);pointer-events:none;cursor:not-allowed;}
 .thankyou-actions .ty-btn.is-ready{animation:tyGlow 1.8s ease-in-out infinite;}
@@ -2494,30 +2544,40 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
     </div>
   </div>
   <div class="thankyou-overlay" id="thankyouOverlay" role="dialog" aria-modal="true" aria-labelledby="thankyouTitle">
-    <div class="thankyou-card">
+    <div class="thankyou-card ty-wide">
       <button type="button" class="thankyou-close" id="thankyouClose" data-thankyou-close aria-label="إغلاق">✕</button>
-      <div class="thankyou-icon">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4 12.5L9.5 18L20 6" stroke="#0A0912" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+      <div class="ty-head">
+        <div class="thankyou-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 12.5L9.5 18L20 6" stroke="#0A0912" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="ty-head-text">
+          <h3 id="thankyouTitle">تم استلام طلبك بنجاح!</h3>
+          <p>شكراً لك <span class="ty-name" id="tyName"></span>، فريقنا سيتواصل معك في أقرب وقت لإتمام تفعيل اشتراكك.</p>
+        </div>
       </div>
-      <h3 id="thankyouTitle">تم استلام طلبك بنجاح!</h3>
-      <p>شكراً لك <span class="ty-name" id="tyName"></span>، فريقنا سيتواصل معك في أقرب وقت لإتمام تفعيل اشتراكك.</p>
-      <div class="ty-order" id="tyOrder" hidden>
-        <span class="ty-order-label">رقم طلبك</span>
-        <b class="ty-order-no" id="tyOrderNo" dir="ltr"></b>
-      </div>
-      <div class="thankyou-summary" id="tySummary"></div>
-      <div class="pm-important-note" style="text-align:right;">
-        <strong>⚠️ ملاحظة هامة</strong>
-        <p>يتم استلام الطلبات عبر واتساب فقط. اضغط أولًا على «نسخ معلومات الطلب»، ثم تواصل معنا عبر واتساب والصق المعلومات في المحادثة لمتابعة طلبك.</p>
-      </div>
-      <div class="thankyou-actions">
-        <button type="button" class="btn btn-primary ty-btn" id="tyCopyInfo">نسخ معلومات الطلب</button>
-        <a href="https://wa.me/message/MNQ3N2PJXGKBO1" target="_blank" rel="noopener" class="btn btn-gold ty-btn is-locked" id="tyWhatsapp" aria-disabled="true" tabindex="-1">تابع طلبك عبر واتساب</a>
-        <p class="ty-hint" id="tyHint">زر واتساب يُفعَّل بعد نسخ معلومات الطلب</p>
-        <textarea class="ty-fallback" id="tyFallback" readonly hidden aria-label="معلومات الطلب"></textarea>
-        <a href="account.html#ordersPanel" class="btn btn-ghost ty-btn" id="tyTrack">تابع طلبك في حسابي</a>
+      <div class="ty-grid">
+        <div class="ty-col ty-col-info">
+          <div class="ty-order" id="tyOrder" hidden>
+            <span class="ty-order-label">رقم طلبك</span>
+            <b class="ty-order-no" id="tyOrderNo" dir="ltr"></b>
+          </div>
+          <div class="thankyou-summary" id="tySummary"></div>
+          <div class="pm-important-note" style="text-align:right;">
+            <strong>⚠️ ملاحظة هامة</strong>
+            <p>يتم استلام الطلبات عبر واتساب فقط. اضغط أولًا على «نسخ معلومات الطلب»، ثم تواصل معنا عبر واتساب والصق المعلومات في المحادثة لمتابعة طلبك.</p>
+          </div>
+        </div>
+        <div class="ty-col ty-col-actions">
+          <div class="thankyou-actions">
+            <button type="button" class="btn btn-primary ty-btn" id="tyCopyInfo">نسخ معلومات الطلب</button>
+            <a href="https://wa.me/message/MNQ3N2PJXGKBO1" target="_blank" rel="noopener" class="btn btn-gold ty-btn is-locked" id="tyWhatsapp" aria-disabled="true" tabindex="-1">تابع طلبك عبر واتساب</a>
+            <p class="ty-hint" id="tyHint">زر واتساب يُفعَّل بعد نسخ معلومات الطلب</p>
+            <textarea class="ty-fallback" id="tyFallback" readonly hidden aria-label="معلومات الطلب"></textarea>
+            <a href="account.html#ordersPanel" class="btn btn-ghost ty-btn" id="tyTrack">تابع طلبك في حسابي</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -2694,22 +2754,13 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
   if (authOverlay) authOverlay.addEventListener('click', (e) => { if (e.target === authOverlay) closeAuthModal(); });
 
   function renderLoggedIn(name){
-    accountArea.innerHTML = `
-      <div class="acc-logged">
-        <span class="acc-name" title="${name}">👋 ${name}</span>
-        <button type="button" class="acc-dash-btn" id="dashOpenBtn" data-dash-open="orders">🧾 لوحة التحكم</button>
-        <button type="button" class="acc-logout" id="logoutBtn">خروج</button>
-      </div>
-    `;
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      auth.signOut();
-    });
-    document.getElementById('dashOpenBtn').addEventListener('click', () => openDashboard('orders'));
+    if (window.petyaAccountMenu) window.petyaAccountMenu.render(auth.currentUser);
     const poNameInput = document.getElementById('po-name');
     if (poNameInput && !poNameInput.value) poNameInput.value = name;
   }
 
   function renderLoggedOut(){
+    if (window.petyaAccountMenu) window.petyaAccountMenu.reset();
     accountArea.innerHTML = `<button class="acc-btn" id="authOpenBtn">تسجيل الدخول</button>`;
     document.getElementById('authOpenBtn').addEventListener('click', openPrivacyModal);
   }
@@ -3091,5 +3142,92 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
   })();
 </script>
 <script>(function(){const h=document.querySelector('header'),l=h&&h.querySelector('.logo'),n=h&&h.querySelector('#navLinks'),c=h&&h.querySelector('.nav-cta');if(!l||!n||!c)return;const t=l.children[1];if(t){t.className='logo-text';t.innerHTML='<span class="logo-name">Petya Digital Store</span>';}c.querySelectorAll(':scope > .btn').forEach(x=>x.remove());const a=h.querySelector('#authOpenBtn');if(a)a.textContent='تسجيل الدخول';n.classList.remove('open');n.hidden=true;const m=h.querySelector('#menuToggle');if(m&&!m.dataset.headerSync){m.dataset.headerSync='1';const set=open=>{n.classList.toggle('open',open);n.hidden=!open;m.setAttribute('aria-expanded',String(open));m.setAttribute('aria-label',open?'إغلاق القائمة':'فتح القائمة');};set(false);m.addEventListener('click',()=>set(n.hidden));n.querySelectorAll('a').forEach(x=>x.addEventListener('click',()=>set(false)));document.addEventListener('click',e=>{if(!h.contains(e.target))set(false);});document.addEventListener('keydown',e=>{if(e.key==='Escape')set(false);});}})();</script>
+<style id="account-menu">
+/* ===== Account menu (header): one round avatar + a small dropdown ===== */
+#accountArea.has-menu{display:flex !important;align-items:center;}
+.am{position:relative;}
+.am-btn{width:42px;height:42px;padding:0;border:0;border-radius:50%;background:none;display:grid;place-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.am-avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;overflow:hidden;flex-shrink:0;font-weight:800;font-size:15px;line-height:1;color:#fff;background:linear-gradient(135deg,var(--accent),#6D3FE0);box-shadow:0 0 0 2px var(--border-strong);transition:box-shadow .2s,transform .2s;}
+.am-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+.am-btn:hover .am-avatar,.am-btn[aria-expanded="true"] .am-avatar{box-shadow:0 0 0 3px var(--accent-soft),0 6px 16px rgba(59,130,246,.35);}
+.am-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.am-menu{position:absolute;top:calc(100% + 10px);right:0;left:auto;z-index:400;width:min(290px,calc(100vw - 24px));padding:8px;border-radius:18px;background:var(--bg-elev);border:1px solid var(--border-strong);box-shadow:0 24px 60px rgba(0,0,0,.45);text-align:right;}
+.am-menu[hidden]{display:none;}
+.am-head{display:flex;align-items:center;gap:12px;padding:10px 10px 12px;margin-bottom:6px;border-bottom:1px solid var(--border);}
+.am-avatar-lg{width:44px;height:44px;font-size:18px;box-shadow:none;}
+.am-who{min-width:0;display:flex;flex-direction:column;line-height:1.5;}
+.am-who b{font-size:14.5px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.am-who small{font-size:12px;color:var(--text-faint);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right;}
+.am-item{display:flex;align-items:center;gap:12px;width:100%;padding:11px 12px;border:0;border-radius:12px;background:none;color:var(--text-dim);font:inherit;font-size:14px;font-weight:600;text-align:right;cursor:pointer;text-decoration:none;transition:background .15s,color .15s;}
+.am-item svg{width:18px;height:18px;flex-shrink:0;}
+.am-item:hover,.am-item:focus-visible{background:var(--hover-tint-strong);color:var(--text);outline:none;}
+.am-out{margin-top:4px;color:#F87171;}
+.am-out:hover,.am-out:focus-visible{background:rgba(248,113,113,.1);color:#F87171;}
+body.light .am-out,body.light .am-out:hover{color:#DC2626;}
+body.light .am-menu{box-shadow:0 24px 60px rgba(30,60,120,.2);}
+@media (prefers-reduced-motion:reduce){.am-avatar{transition:none;}}
+</style>
+<script id="account-menu-js">
+(function(){
+  var area = document.getElementById('accountArea');
+  if (!area) return;
+  var ICON_ORDERS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10a1 1 0 011 1v16l-3-2-2 2-2-2-2 2-3-2V4a1 1 0 011-1z"/><path d="M9 8h6M9 12h6"/></svg>';
+  var ICON_USER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+  var ICON_OUT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>';
+  function esc(v){ return String(v == null ? '' : v).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function fmtPhone(p){
+    var m = String(p || '').replace(/\D/g, '').match(/^213([567]\d{8})$/);
+    return m ? '+213 ' + m[1].slice(0,3) + ' ' + m[1].slice(3,5) + ' ' + m[1].slice(5,7) + ' ' + m[1].slice(7,9) : (p || '');
+  }
+  function setAvatar(el, name, photo){
+    el.textContent = (Array.from(String(name || '').trim())[0] || '؟').toUpperCase();
+    if (!photo) return;
+    var img = new Image();
+    img.alt = ''; img.referrerPolicy = 'no-referrer';
+    img.onload = function(){ el.textContent = ''; el.appendChild(img); };
+    img.src = photo;
+  }
+  function closeMenu(){
+    var m = document.getElementById('amMenu'), b = document.getElementById('amBtn');
+    if (m) m.hidden = true;
+    if (b) b.setAttribute('aria-expanded', 'false');
+  }
+  function reset(){ area.classList.remove('has-menu'); }
+  function render(user){
+    if (!user){ reset(); return; }
+    var name = user.displayName || user.email || fmtPhone(user.phoneNumber) || 'حسابي';
+    var sub = user.email || fmtPhone(user.phoneNumber) || '';
+    area.classList.add('has-menu');
+    area.innerHTML =
+      '<div class="am">' +
+        '<button type="button" class="am-btn" id="amBtn" aria-haspopup="menu" aria-expanded="false" aria-label="حسابي" title="' + esc(name) + '"><span class="am-avatar" id="amAvatar"></span></button>' +
+        '<div class="am-menu" id="amMenu" role="menu" hidden>' +
+          '<div class="am-head"><span class="am-avatar am-avatar-lg" id="amAvatarLg"></span><div class="am-who"><b>' + esc(name) + '</b>' + (sub ? '<small dir="ltr">' + esc(sub) + '</small>' : '') + '</div></div>' +
+          '<a class="am-item" role="menuitem" href="account.html#ordersPanel">' + ICON_ORDERS + 'طلباتي</a>' +
+          '<a class="am-item" role="menuitem" href="account.html">' + ICON_USER + 'حسابي</a>' +
+          '<button type="button" class="am-item am-out" role="menuitem" id="amOut">' + ICON_OUT + 'تسجيل الخروج</button>' +
+        '</div>' +
+      '</div>';
+    setAvatar(document.getElementById('amAvatar'), name, user.photoURL);
+    setAvatar(document.getElementById('amAvatarLg'), name, user.photoURL);
+    var btn = document.getElementById('amBtn'), menu = document.getElementById('amMenu');
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      var open = menu.hidden;
+      menu.hidden = !open;
+      btn.setAttribute('aria-expanded', String(open));
+    });
+    menu.addEventListener('click', function(e){ e.stopPropagation(); });
+    document.getElementById('amOut').addEventListener('click', function(){
+      closeMenu();
+      if (typeof auth !== 'undefined') auth.signOut();
+    });
+  }
+  document.addEventListener('click', closeMenu);
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeMenu(); });
+  window.petyaAccountMenu = { render: render, reset: reset, close: closeMenu };
+})();
+</script>
+
 </body>
 </html>
