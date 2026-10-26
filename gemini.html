@@ -2574,7 +2574,7 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
             <a href="https://wa.me/message/MNQ3N2PJXGKBO1" target="_blank" rel="noopener" class="btn btn-gold ty-btn is-locked" id="tyWhatsapp" aria-disabled="true" tabindex="-1">تابع طلبك عبر واتساب</a>
             <p class="ty-hint" id="tyHint">زر واتساب يُفعَّل بعد نسخ معلومات الطلب</p>
             <textarea class="ty-fallback" id="tyFallback" readonly hidden aria-label="معلومات الطلب"></textarea>
-            <a href="account.html#ordersPanel" class="btn btn-ghost ty-btn" id="tyTrack">تابع طلبك في حسابي</a>
+            <a href="account.html" class="btn btn-ghost ty-btn" id="tyTrack">تابع طلبك في حسابي</a>
           </div>
         </div>
       </div>
@@ -3120,7 +3120,7 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
       lastOrderNo = '#' + String(orderRef.id).slice(0, 6).toUpperCase();
       tyOrderNo.textContent = lastOrderNo;
       tyOrder.hidden = false;
-      if (tyTrack) tyTrack.href = 'account.html?order=' + encodeURIComponent(orderRef.id) + '#ordersPanel';
+      if (tyTrack) tyTrack.href = 'account.html?order=' + encodeURIComponent(orderRef.id);
       rememberOrder(user.uid, orderRef.id);
       orderInfo = ['طلب جديد — Petya Digital Store', 'الاسم: ' + name, 'رقم الطلب: ' + lastOrderNo, 'الاشتراك: ' + PRODUCT_NAME, duration ? 'المدة: ' + duration : null].filter(Boolean).join('\n');
       resetShare();
