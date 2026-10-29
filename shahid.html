@@ -2435,8 +2435,13 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
             <li>مسلسلات وأفلام عربية حصرية</li>
             <li>بث مباشر للقنوات والمباريات</li>
           </ul>
-          <div class="pm-price" id="poPriceValue">2200 <small>دج / 3 أشهر</small></div>
-          <div class="pm-flexy" id="poFlexyValue">📱 السعر عبر فليكسي Djezzy (+20%): <b>2640 دج</b></div>
+                    <div class="pc-duration" role="group" aria-label="اختر مدة الاشتراك">
+            <button type="button" class="pc-duration-btn po-duration-btn active" data-price="1200" data-label="شهر">شهر</button>
+            <button type="button" class="pc-duration-btn po-duration-btn" data-price="2600" data-label="3 أشهر">3 أشهر</button>
+            <button type="button" class="pc-duration-btn po-duration-btn" data-price="4800" data-label="6 أشهر">6 أشهر</button>
+          </div>
+          <div class="pm-price" id="poPriceValue">1200 <small>دج / شهر</small></div>
+          <div class="pm-flexy" id="poFlexyValue">📱 السعر عبر فليكسي Djezzy (+20%): <b>1440 دج</b></div>
         </div>
         <form class="pm-order-form pm-form" id="poForm" data-auth="checking">
           <h4>أكمل طلبك الآن</h4>
@@ -2944,7 +2949,7 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
 
   // ---------- This product's order section ----------
   const PRODUCT_NAME = "Shahid VIP";
-  let PRODUCT_PRICE = 2200;
+  let PRODUCT_PRICE = 1200;
 
   document.querySelectorAll('.po-duration-btn').forEach(btn => {
     btn.addEventListener('click', () => {

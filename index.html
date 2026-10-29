@@ -81,7 +81,6 @@
     --c-shahid:#00C2A8;
     --c-starzplay:#9B1B6B;
     --c-kaspersky:#029643;
-    --c-office2021:#D83B01;
     --c-office2024:#B7472A;
     --c-xboxpc:#107C10;
   }
@@ -892,7 +891,6 @@
   .p-shahid .pc-badge{background:var(--c-shahid);} .p-shahid{--pc-glow:var(--c-shahid);}
   .p-starzplay .pc-badge{background:var(--c-starzplay);} .p-starzplay{--pc-glow:var(--c-starzplay);}
   .p-kaspersky .pc-badge{background:var(--c-kaspersky);} .p-kaspersky{--pc-glow:var(--c-kaspersky);}
-  .p-office2021 .pc-badge{background:var(--c-office2021);} .p-office2021{--pc-glow:var(--c-office2021);}
   .p-office2024 .pc-badge{background:var(--c-office2024);} .p-office2024{--pc-glow:var(--c-office2024);}
   .p-xboxpc .pc-badge{background:var(--c-xboxpc);} .p-xboxpc{--pc-glow:var(--c-xboxpc);}
 
@@ -3265,8 +3263,13 @@ body.light .ft-cat a:hover, body.light .ft-col a:hover{ color:var(--accent); }
           <ul class="pc-features">
             <li>وصول كامل لأحدث النماذج</li>
             <li>حد استخدام أعلى بلا انتظار</li>
-            <li>تفعيل على حسابك الشخصي</li>
+            <li>تفعيل على حساب مشترك</li>
           </ul>
+          <div class="pc-duration" role="group" aria-label="اختر مدة الاشتراك">
+            <button type="button" class="pc-duration-btn active" data-price="1200" data-label="شهر">شهر</button>
+            <button type="button" class="pc-duration-btn" data-price="2400" data-label="3 أشهر">3 أشهر</button>
+            <button type="button" class="pc-duration-btn" data-price="6500" data-label="سنة">سنة</button>
+          </div>
           <div class="pc-footer">
             <div class="price">1200 <small>دج / شهر</small></div>
             <a href="chatgpt.html" class="pc-order">اطلب الآن ←</a>
@@ -3291,7 +3294,7 @@ body.light .ft-cat a:hover, body.light .ft-col a:hover{ color:var(--accent); }
           </div>
         </div>
 
-        <div class="product-card p-capcut reveal" data-category="design" data-price="1500">
+        <div class="product-card p-capcut reveal" data-category="design" data-price="1800">
           <div class="pc-top">
             <div class="pc-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.4"/><circle cx="6" cy="18" r="2.4"/><path d="M8 7.5 19 17M8 16.5 19 7"/></svg></div>
             <span class="pc-price-pill">للمبدعين</span>
@@ -3303,13 +3306,17 @@ body.light .ft-cat a:hover, body.light .ft-col a:hover{ color:var(--accent); }
             <li>مكتبة تأثيرات وقوالب Pro</li>
             <li>أدوات ذكاء اصطناعي للمونتاج</li>
           </ul>
+          <div class="pc-duration" role="group" aria-label="اختر مدة الاشتراك">
+            <button type="button" class="pc-duration-btn active" data-price="1800" data-label="شهر">شهر</button>
+            <button type="button" class="pc-duration-btn" data-price="4500" data-label="3 أشهر">3 أشهر</button>
+          </div>
           <div class="pc-footer">
-            <div class="price">1500 <small>دج / شهر</small></div>
+            <div class="price">1800 <small>دج / شهر</small></div>
             <a href="capcut.html" class="pc-order">اطلب الآن ←</a>
           </div>
         </div>
 
-        <div class="product-card p-shahid reveal" data-category="streaming" data-price="2200">
+        <div class="product-card p-shahid reveal" data-category="streaming" data-price="1200">
           <div class="pc-top">
             <div class="pc-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="6" width="17" height="12" rx="2"/><path d="M8.5 21h7M12 18v3"/></svg></div>
             <span class="pc-price-pill">محتوى عربي</span>
@@ -3321,13 +3328,18 @@ body.light .ft-cat a:hover, body.light .ft-col a:hover{ color:var(--accent); }
             <li>مسلسلات وأفلام عربية حصرية</li>
             <li>بث مباشر للقنوات والمباريات</li>
           </ul>
+          <div class="pc-duration" role="group" aria-label="اختر مدة الاشتراك">
+            <button type="button" class="pc-duration-btn active" data-price="1200" data-label="شهر">شهر</button>
+            <button type="button" class="pc-duration-btn" data-price="2600" data-label="3 أشهر">3 أشهر</button>
+            <button type="button" class="pc-duration-btn" data-price="4800" data-label="6 أشهر">6 أشهر</button>
+          </div>
           <div class="pc-footer">
-            <div class="price">2200 <small>دج / 3 أشهر</small></div>
+            <div class="price">1200 <small>دج / شهر</small></div>
             <a href="shahid.html" class="pc-order">اطلب الآن ←</a>
           </div>
         </div>
 
-        <div class="product-card p-claude reveal" data-category="ai" data-price="6500">
+        <div class="product-card p-claude reveal" data-category="ai" data-price="7900">
           <div class="pc-top">
             <div class="pc-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" stroke-linecap="round"/><circle cx="12" cy="12" r="3.2" fill="currentColor" stroke="none"/></svg></div>
           </div>
@@ -3339,12 +3351,12 @@ body.light .ft-cat a:hover, body.light .ft-col a:hover{ color:var(--accent); }
             <li>تفعيل على حساب أصلي</li>
           </ul>
           <div class="pc-footer">
-            <div class="price">6500 <small>دج / شهر</small></div>
+            <div class="price">7900 <small>دج / شهر</small></div>
             <a href="claude.html" class="pc-order">اطلب الآن ←</a>
           </div>
         </div>
 
-        <div class="product-card p-gemini reveal" data-category="ai" data-price="2500">
+        <div class="product-card p-gemini reveal" data-category="ai" data-price="2000">
           <div class="pc-top">
             <div class="pc-badge"><svg viewBox="0 0 24 24"><path d="M12 2.3c.8 5.4 3.1 7.8 8.5 8.7-5.4.9-7.7 3.3-8.5 8.7-.8-5.4-3.1-7.8-8.5-8.7 5.4-.9 7.7-3.3 8.5-8.7Z" fill="currentColor"/></svg></div>
             <span class="pc-price-pill">جديد</span>
@@ -3359,12 +3371,12 @@ body.light .ft-cat a:hover, body.light .ft-col a:hover{ color:var(--accent); }
             <li>دعم فني بعد التفعيل</li>
           </ul>
           <div class="pc-footer">
-            <div class="price">2500 <small>دج / شهر</small></div>
+            <div class="price">2000 <small>دج / سنة</small></div>
             <a href="gemini.html" class="pc-order">اطلب الآن ←</a>
           </div>
         </div>
 
-        <div class="product-card p-snapchat reveal" data-category="social" data-price="2500">
+        <div class="product-card p-snapchat reveal" data-category="social" data-price="2900">
           <div class="pc-top">
             <div class="pc-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 19V11a6 6 0 0 1 12 0v8l-2.2-1.6L14 19l-2-1.6L10 19l-1.8-1.6Z"/><circle cx="9.5" cy="11" r=".9" fill="currentColor" stroke="none"/><circle cx="14.5" cy="11" r=".9" fill="currentColor" stroke="none"/></svg></div>
             <span class="pc-price-pill">حصري</span>
@@ -3377,12 +3389,12 @@ body.light .ft-cat a:hover, body.light .ft-col a:hover{ color:var(--accent); }
             <li>تخصيص متقدم للتطبيق</li>
           </ul>
           <div class="pc-duration" role="group" aria-label="اختر مدة الاشتراك">
-            <button type="button" class="pc-duration-btn active" data-price="2500" data-label="3 أشهر">3 أشهر</button>
-            <button type="button" class="pc-duration-btn" data-price="3800" data-label="6 أشهر">6 أشهر</button>
-            <button type="button" class="pc-duration-btn" data-price="6200" data-label="12 شهر">12 شهر</button>
+            <button type="button" class="pc-duration-btn active" data-price="2900" data-label="3 أشهر">3 أشهر</button>
+            <button type="button" class="pc-duration-btn" data-price="5900" data-label="6 أشهر">6 أشهر</button>
+            <button type="button" class="pc-duration-btn" data-price="8500" data-label="12 شهر">12 شهر</button>
           </div>
           <div class="pc-footer">
-            <div class="price">2500 <small>دج / 3 أشهر</small></div>
+            <div class="price">2900 <small>دج / 3 أشهر</small></div>
             <a href="snapchat.html" class="pc-order">اطلب الآن ←</a>
           </div>
         </div>
@@ -3488,25 +3500,6 @@ body.light .ft-cat a:hover, body.light .ft-col a:hover{ color:var(--accent); }
             <a href="crunchyroll.html" class="pc-order">اطلب الآن ←</a>
           </div>
         </div>
-
-        <div class="product-card p-office2021 reveal" data-category="software" data-price="2700">
-          <div class="pc-top">
-            <div class="pc-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 12.5h8M8 16h5"/></svg></div>
-            <span class="pc-price-pill">مدى الحياة</span>
-          </div>
-          <h3>Microsoft Office 2021 Pro Plus</h3>
-          <p class="desc">مفتاح تفعيل أصلي لحزمة Microsoft Office 2021 Pro Plus، تفعيل دائم مدى الحياة على جهاز واحد.</p>
-          <ul class="pc-features">
-            <li>تفعيل رسمي ومدى الحياة</li>
-            <li>Word، Excel، PowerPoint وباقي البرامج</li>
-            <li>إرسال المفتاح فور تأكيد الطلب</li>
-          </ul>
-          <div class="pc-footer">
-            <div class="price">2700 <small>دج / مدى الحياة</small></div>
-            <a href="office2021.html" class="pc-order">اطلب الآن ←</a>
-          </div>
-        </div>
-
         <div class="product-card p-office2024 reveal" data-category="software" data-price="4500">
           <div class="pc-top">
             <div class="pc-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 12.5h8M8 16h5"/></svg></div>
@@ -3809,7 +3802,6 @@ body.light .ft-cat a:hover, body.light .ft-col a:hover{ color:var(--accent); }
               <option>Prime Video</option>
               <option>STARZPLAY</option>
               <option>Kaspersky</option>
-              <option>Microsoft Office 2021 Pro Plus</option>
               <option>Microsoft 365</option>
               <option>أخرى</option>
             </select>

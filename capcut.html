@@ -2442,8 +2442,12 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
             <li>مكتبة تأثيرات وقوالب Pro</li>
             <li>أدوات ذكاء اصطناعي للمونتاج</li>
           </ul>
-          <div class="pm-price" id="poPriceValue">1500 <small>دج / شهر</small></div>
-          <div class="pm-flexy" id="poFlexyValue">📱 السعر عبر فليكسي Djezzy (+20%): <b>1800 دج</b></div>
+                    <div class="pc-duration" role="group" aria-label="اختر مدة الاشتراك">
+            <button type="button" class="pc-duration-btn po-duration-btn active" data-price="1800" data-label="شهر">شهر</button>
+            <button type="button" class="pc-duration-btn po-duration-btn" data-price="4500" data-label="3 أشهر">3 أشهر</button>
+          </div>
+          <div class="pm-price" id="poPriceValue">1800 <small>دج / شهر</small></div>
+          <div class="pm-flexy" id="poFlexyValue">📱 السعر عبر فليكسي Djezzy (+20%): <b>2160 دج</b></div>
         </div>
         <form class="pm-order-form pm-form" id="poForm" data-auth="checking">
           <h4>أكمل طلبك الآن</h4>
@@ -2951,7 +2955,7 @@ body.light .account-area .acc-logout:hover{color:#DC2626;}
 
   // ---------- This product's order section ----------
   const PRODUCT_NAME = "CapCut Pro";
-  let PRODUCT_PRICE = 1500;
+  let PRODUCT_PRICE = 1800;
 
   document.querySelectorAll('.po-duration-btn').forEach(btn => {
     btn.addEventListener('click', () => {
