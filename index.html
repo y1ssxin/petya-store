@@ -1598,15 +1598,23 @@
     padding:22px 0;
     overflow:hidden;
     background:var(--bg-elev);
+    direction:ltr; /* keep the loop direction identical regardless of page RTL */
   }
   .marquee-track{
     display:flex;
-    gap:56px;
-    white-space:nowrap;
-    animation:scroll-x 26s linear infinite;
     width:max-content;
+    white-space:nowrap;
+    animation:scroll-x 90s linear infinite;
+    will-change:transform;
   }
-  .marquee-track span{
+  /* two identical groups; the trailing padding equals the gap so the loop point is seamless */
+  .marquee-group{
+    display:flex;
+    flex-shrink:0;
+    gap:56px;
+    padding-right:56px;
+  }
+  .marquee-group span{
     font-size:14px;
     font-weight:600;
     color:var(--text-faint);
@@ -1615,7 +1623,7 @@
     align-items:center;
     gap:10px;
   }
-  .marquee-track span::before{content:"◆";color:var(--accent-2);font-size:10px;}
+  .marquee-group span::before{content:"◆";color:var(--accent-2);font-size:10px;}
   @keyframes scroll-x{
     from{transform:translateX(0);}
     to{transform:translateX(-50%);}
@@ -2969,9 +2977,11 @@ footer{ padding:64px 0 26px; }
 .ft-ico.wa{ background:rgba(37,211,102,.15); color:#25D366; }
 .ft-ico.tg{ background:rgba(42,171,238,.16); color:#2AABEE; }
 .ft-ico.mail{ background:var(--accent-soft); color:var(--accent-2); }
+.ft-ico.ig{ background:rgba(225,48,108,.15); color:#E1306C; }
 body.light .ft-ico.wa{ color:#16A34A; }
 body.light .ft-ico.tg{ color:#0284C7; }
 body.light .ft-ico.mail{ color:var(--accent); }
+body.light .ft-ico.ig{ color:#BE185D; }
 .ft-text{ display:flex; flex-direction:column; min-width:0; line-height:1.55; }
 .ft-text b{ font-size:14px; font-weight:700; color:var(--text); }
 .ft-text small{ font-size:12.5px; color:var(--text-faint); }
@@ -3149,10 +3159,10 @@ body.light .ft-cat a:hover, body.light .ft-col a:hover{ color:var(--accent); }
   </section>
 
   <!-- ================= MARQUEE ================= -->
-  <div class="marquee-wrap">
+  <div class="marquee-wrap" aria-label="منتجاتنا">
     <div class="marquee-track">
-      <span>Netflix</span><span>ChatGPT Pro</span><span>Canva Pro</span><span>CapCut Pro</span><span>Shahid VIP</span><span>Claude Pro</span><span>Gemini AI Pro</span><span>Snapchat+</span><span>Disney+</span><span>Prime Video</span><span>Windows Key</span>
-      <span>Netflix</span><span>ChatGPT Pro</span><span>Canva Pro</span><span>CapCut Pro</span><span>Shahid VIP</span><span>Claude Pro</span><span>Gemini AI Pro</span><span>Snapchat+</span><span>Disney+</span><span>Prime Video</span><span>Windows Key</span>
+      <div class="marquee-group"><span>Netflix Premium</span><span>ChatGPT Pro</span><span>Canva Pro</span><span>CapCut Pro</span><span>Shahid VIP</span><span>Claude Pro</span><span>Gemini AI Pro</span><span>Snapchat+</span><span>Xbox Game Pass Ultimate PC</span><span>Prime Video</span><span>YouTube Premium</span><span>STARZPLAY</span><span>Crunchyroll Premium</span><span>Microsoft 365</span><span>Windows Key</span><span>Disney+</span><span>Netflix Premium</span><span>ChatGPT Pro</span><span>Canva Pro</span><span>CapCut Pro</span><span>Shahid VIP</span><span>Claude Pro</span><span>Gemini AI Pro</span><span>Snapchat+</span><span>Xbox Game Pass Ultimate PC</span><span>Prime Video</span><span>YouTube Premium</span><span>STARZPLAY</span><span>Crunchyroll Premium</span><span>Microsoft 365</span><span>Windows Key</span><span>Disney+</span></div>
+      <div class="marquee-group" aria-hidden="true"><span>Netflix Premium</span><span>ChatGPT Pro</span><span>Canva Pro</span><span>CapCut Pro</span><span>Shahid VIP</span><span>Claude Pro</span><span>Gemini AI Pro</span><span>Snapchat+</span><span>Xbox Game Pass Ultimate PC</span><span>Prime Video</span><span>YouTube Premium</span><span>STARZPLAY</span><span>Crunchyroll Premium</span><span>Microsoft 365</span><span>Windows Key</span><span>Disney+</span><span>Netflix Premium</span><span>ChatGPT Pro</span><span>Canva Pro</span><span>CapCut Pro</span><span>Shahid VIP</span><span>Claude Pro</span><span>Gemini AI Pro</span><span>Snapchat+</span><span>Xbox Game Pass Ultimate PC</span><span>Prime Video</span><span>YouTube Premium</span><span>STARZPLAY</span><span>Crunchyroll Premium</span><span>Microsoft 365</span><span>Windows Key</span><span>Disney+</span></div>
     </div>
   </div>
 
@@ -3542,20 +3552,25 @@ body.light .ft-cat a:hover, body.light .ft-col a:hover{ color:var(--accent); }
           </div>
         </div>
 
-        <div class="product-card p-disney reveal" data-category="streaming" data-price="1000">
+        <div class="product-card p-disney reveal" data-category="streaming" data-price="1800">
           <div class="pc-top">
             <div class="pc-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 2.4 5.8L20.5 9l-4.6 4 1.4 6.2L12 16.2 6.7 19.2 8.1 13 3.5 9l6.1-.2Z"/></svg></div>
             <span class="pc-price-pill">عائلي</span>
           </div>
           <h3>Disney+</h3>
-          <p class="desc">مكتبة ضخمة من أفلام ديزني، مارفل، ستار وورز، ناشيونال جيوغرافيك بجودة عالية لكل العائلة.</p>
+          <p class="desc">مكتبة ضخمة من أفلام ديزني، مارفل، ستار وورز، ناشيونال جيوغرافيك، والآن تشمل Hulu، بجودة عالية لكل العائلة.</p>
           <ul class="pc-features">
             <li>مشاهدة بجودة 4K Ultra HD</li>
-            <li>محتوى ديزني، مارفل وستار وورز</li>
+            <li>محتوى ديزني، مارفل وستار وورز + Hulu</li>
             <li>مناسب لجميع أفراد العائلة</li>
           </ul>
+          <div class="pc-duration" role="group" aria-label="اختر مدة الاشتراك">
+            <button type="button" class="pc-duration-btn active" data-price="1800" data-label="شهر">شهر</button>
+            <button type="button" class="pc-duration-btn" data-price="4200" data-label="3 أشهر">3 أشهر</button>
+            <button type="button" class="pc-duration-btn" data-price="8500" data-label="سنة">سنة</button>
+          </div>
           <div class="pc-footer">
-            <div class="price">1000 <small>دج / شهر</small></div>
+            <div class="price">1800 <small>دج / شهر</small></div>
             <a href="disney.html" class="pc-order">اطلب الآن ←</a>
           </div>
         </div>
@@ -3853,25 +3868,23 @@ body.light .ft-cat a:hover, body.light .ft-col a:hover{ color:var(--accent); }
         <p>منصتك الموثوقة لتفعيل الاشتراكات الرقمية الأصلية بأسعار مناسبة وضمان حقيقي.</p>
         <h5 class="ft-title">تواصل معنا</h5>
         <div class="ft-contact">
+          <a class="ft-link" href="https://www.instagram.com/petya.store.dz/" target="_blank" rel="noopener">
+            <span class="ft-ico ig"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg></span>
+            <span class="ft-text"><b>إنستغرام</b><small dir="ltr" class="ltr">@petya.store.dz</small></span>
+          </a>
           <a class="ft-link" href="https://wa.me/message/MNQ3N2PJXGKBO1" target="_blank" rel="noopener">
             <span class="ft-ico wa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 12a8.5 8.5 0 01-12.4 7.6L3.5 20.5l1-4.4A8.5 8.5 0 1120.5 12z"/><path d="M9 8.8c.3 2.4 2.7 5.3 6.2 6.2l1.2-1.5-2.2-1.1-.9.7c-.9-.4-1.7-1.2-2.1-2.1l.7-.9-1.1-2.2L9 8.8z"/></svg></span>
             <span class="ft-text"><b>واتساب</b><small>راسلنا مباشرة</small></span>
           </a>
-          <a class="ft-link" href="https://t.me/petyaservice" target="_blank" rel="noopener">
-            <span class="ft-ico tg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 4L3 11.2l5.6 2L10.5 19l3-3.7 4.2 3.3L21 4z"/><path d="M8.6 13.2L21 4"/></svg></span>
-            <span class="ft-text"><b>تيليجرام</b><small dir="ltr" class="ltr">@petyaservice</small></span>
-          </a>
           <a class="ft-link" href="https://t.me/petyastoredz" target="_blank" rel="noopener">
-            <span class="ft-ico tg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20v-1.5A4.5 4.5 0 017.5 14h3A4.5 4.5 0 0115 18.5V20"/><path d="M16 4.9a3.2 3.2 0 010 6.2M18 14.3A4.5 4.5 0 0121 18.5V20"/></svg></span>
-            <span class="ft-text"><b>مجموعة تيليجرام</b><small dir="ltr" class="ltr">@petyastoredz</small></span>
+            <span class="ft-ico tg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 4L3 11.2l5.6 2L10.5 19l3-3.7 4.2 3.3L21 4z"/><path d="M8.6 13.2L21 4"/></svg></span>
+            <span class="ft-text"><b>قناة تيليجرام</b><small dir="ltr" class="ltr">@petyastoredz</small></span>
           </a>
           <a class="ft-link" href="mailto:thepetyacompany@gmail.com">
             <span class="ft-ico mail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7l8.5 6 8.5-6"/></svg></span>
             <span class="ft-text"><b>البريد الإلكتروني</b><small dir="ltr" class="ltr">thepetyacompany@gmail.com</small></span>
           </a>
         </div>
-        <!-- Instagram: أضف الرابط هنا عند توفره
-        <a class="ft-link" href="https://instagram.com/YOUR_PAGE" target="_blank" rel="noopener"> ... </a> -->
       </div>
 
       <!-- ===== المنتجات حسب القسم ===== -->
@@ -3933,7 +3946,7 @@ body.light .ft-cat a:hover, body.light .ft-col a:hover{ color:var(--accent); }
     </div>
 
     <div class="footer-bottom">
-      <span>© 2026 Petya Digital Product. جميع الحقوق محفوظة.</span>
+      <span dir="ltr">© 2026 All Rights Reserved by Petya Enterprise Projects.</span>
       <a href="#top" class="ft-top" aria-label="العودة إلى أعلى الصفحة">↑ العودة للأعلى</a>
     </div>
   </div>
