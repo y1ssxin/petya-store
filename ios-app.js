@@ -5,6 +5,21 @@
     (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
   if (standalone) doc.classList.add('is-standalone');
 
+  // iPhone installed app: the page may start BELOW the status bar (already inset) or
+  // UNDER it. Only add top spacing in the second case, otherwise the header ends up low.
+  function fixTopInset() {
+    if (!standalone) return;
+    var portrait = window.innerHeight > window.innerWidth;
+    if (!portrait) { doc.style.setProperty('--safe-top', '0px'); return; }
+    var full = Math.max(screen.width, screen.height);
+    var alreadyInset = window.innerHeight < full - 20;   // webview is shorter than the screen
+    if (alreadyInset) doc.style.setProperty('--safe-top', '0px');
+    else doc.style.removeProperty('--safe-top');
+  }
+  fixTopInset();
+  window.addEventListener('resize', fixTopInset);
+  window.addEventListener('orientationchange', function () { setTimeout(fixTopInset, 300); });
+
   var ICONS = {
     home: '<svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>',
     products: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/></svg>',

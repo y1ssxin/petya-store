@@ -7,11 +7,12 @@
 *{ -webkit-tap-highlight-color: transparent; }
 html{ -webkit-text-size-adjust: 100%; }
 a, button, .btn{ touch-action: manipulation; }
-body{ overscroll-behavior-y: none; }
+/* The page used overflow-x:hidden on body, which breaks sticky headers. clip does the same job without that side effect. */
+html body{ overflow-x: clip !important; }
 
 /* Tab bar */
 .petya-tabbar{ display: none; }
-@media (max-width: 820px), (display-mode: standalone){
+@media (max-width: 820px){
   .petya-tabbar{
     display: flex; justify-content: space-around; align-items: stretch;
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 90;
@@ -25,6 +26,8 @@ body{ overscroll-behavior-y: none; }
   }
   body{ padding-bottom: calc(var(--tab-h) + var(--safe-bottom) + 8px); }
   input, select, textarea{ font-size: 16px; } /* stops iOS zoom on focus */
+  /* keep the three-line menu button visible on every page */
+  header .nav-cta .menu-toggle{ display: flex !important; }
 }
 .petya-tab{
   flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -59,11 +62,16 @@ body{ overscroll-behavior-y: none; }
   font-size: 18px; padding: 4px 6px; cursor: pointer;
 }
 
-/* Installed app mode: draw under the status bar, keep header below the notch */
-html.is-standalone body{ padding-top: var(--safe-top); }
-html.is-standalone header{ top: var(--safe-top); }
-html.is-standalone::before{
-  content: ""; position: fixed; top: 0; left: 0; right: 0; height: var(--safe-top);
-  background: #0B1526; z-index: 200;
+/* Installed app mode (iPhone): the header itself extends under the status bar,
+   so there is no separate empty band above it. */
+html.is-standalone header{
+  top: 0;
+  padding-top: var(--safe-top);
+}
+/* Light theme: keep a dark band behind the white status-bar text so it stays readable */
+html.is-standalone body.light header{
+  background-image: linear-gradient(#0B1526, #0B1526);
+  background-repeat: no-repeat;
+  background-size: 100% var(--safe-top);
 }
 @media (prefers-reduced-motion: reduce){ .petya-tab{ transition: none; } }
