@@ -1,5 +1,5 @@
 // Bump the version number whenever you update the site so phones get the new files.
-const CACHE = 'petya-store-v4';
+const CACHE = 'petya-store-v3';
 const CORE = ['./index.html', './ios-app.css', './ios-app.js', './manifest.json',
               './icons/icon-180.png', './icons/icon-192.png', './icons/icon-512.png'];
 
