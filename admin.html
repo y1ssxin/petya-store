@@ -20,6 +20,7 @@ button{cursor:pointer;border:0}
 .stat i .ic{width:19px;height:19px;color:var(--c)}
 .meta span{display:inline-flex;align-items:center;gap:5px}
 .chip .ic{width:1.2em;height:1.2em}
+img.logo{display:block;object-fit:cover;background:none}
 .hide{display:none!important}
 .center{min-height:100vh;display:grid;place-items:center;padding:20px;text-align:center}
 .box{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:32px;max-width:380px;width:100%;box-shadow:var(--shadow)}
@@ -70,6 +71,22 @@ main{padding:24px;max-width:1240px;margin:auto}
 .person>div:last-child{flex:1;min-width:0}
 .fresh{animation:f 3s ease-out}
 @keyframes f{from{box-shadow:0 0 0 2px var(--accent)}to{box-shadow:0 0 0 2px transparent}}
+.order{background:var(--card2);border:1px solid var(--line);border-inline-start:5px solid var(--c,#3B82F6);border-radius:16px;padding:16px;margin-bottom:12px;display:flex;flex-direction:column;gap:12px}
+.order.st-new{--c:#3B82F6}.order.st-pending{--c:#d97706}.order.st-ok{--c:#16a34a}.order.st-cancelled{--c:#dc2626}
+.oh{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.pn{font-size:16px;font-weight:700}
+.on{color:var(--faint);font-size:12px;margin-top:3px}
+.pr{display:flex;flex-direction:column;align-items:flex-end;gap:6px;font-weight:700;font-size:18px;white-space:nowrap}
+.flds{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
+.fld small{display:block;color:var(--faint);font-size:11px;margin-bottom:2px}
+.fld span{font-size:14px;font-weight:500;word-break:break-word}
+.note{background:var(--card);border:1px dashed var(--line);border-radius:12px;padding:10px 12px;font-size:13px;color:var(--dim)}
+.alert{background:rgba(220,38,38,.12);color:#dc2626;border-radius:12px;padding:10px 12px;font-size:13px;font-weight:600}
+.acts .go{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+.acts .go:hover{color:#fff;filter:brightness(1.1)}
+.acts .no{color:#dc2626;border-color:color-mix(in srgb,#dc2626 40%,var(--line))}
+.acts select{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:6px 8px;font-size:12px;font-family:inherit;color:inherit}
+.acts a,.acts button{padding:8px 14px;font-size:13px}
 .empty{color:var(--faint);font-size:14px;padding:8px 0}
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:12px 22px;border-radius:14px;font-weight:600;z-index:9;box-shadow:0 12px 34px rgba(59,130,246,.4)}
 .err{color:#dc2626;font-size:13px;margin-top:12px}
@@ -94,7 +111,7 @@ main{padding:24px;max-width:1240px;margin:auto}
 
 <div id="login" class="center">
   <div class="box">
-    <div class="logo">P</div>
+    <img class="logo" alt="Petya" src="data:image/webp;base64,UklGRoAFAABXRUJQVlA4IHQFAACwHwCdASpwAHAAPikUiEMhoSESSkxIGAKEoAvYu5SV/S/kN+zPxcWJ/FfgL9wur8R1yA/FX+gbyX/ad0V+sn+M9v/pAP1V6wD0APLC/2/+A+DP9mP119mW8Q5XbH1ZwDFnPxy1IvUk/7v04v5L7cvbp8df8X+5/AP/Jv51/lv6r7OXUUfowJ+pX9XFfidQcTED+R/Vj1b/Vw2sznqP/VVhavpiUqul6L+2hlP7YABRfJisMqJM6+nwBczGjJ8MuIArAYgtS0HLi9pEZ1Q56zQpgHUP2UbiPflOKvgqFPnCOtvNQ8Le52XzyN/2elWI3U8d3Dm8Vg6w1/HfqDZ//+pYv////88AAPg5ovfAbkQNv/njmf/6mhPi8Yatj//fME/4WjxkeNKvqlThblCXI++IrCRtsX4+e+Xg5gbop0x7nIr3m62WgyqHelRPGM8C7cj/QfFn9wObJkkuCN4AerwzBhYje2G0bPc5wTkuU5gUtjr9Ap9CS3o7rNH+19C1hDujrs/fSIeECWmvL1kulmOrZ+yZlBeacyeS0ZxREUb9sqyEjRQ4pLytgt1iIXO9vbzZo+tQbW+1Yyree0cVB486mNdOdu2XxARTZBGXS6KxSRZT6GQCyWM8mXpS6W8096f//PwmekQyOxDGbW7jZfkxkD5s8s1DbqX737/2PEklJiNgtWYeeyu0jT/+XCjDdEfWzngtFbo/nkpfjEPf8vioEhTvBZhmGdw+yLVC9hwBx6Vg64woyHB9cPCsWV153sM68EC4oPn3g+mZDBFQYhul/4tPPzbYjqj5I+l3LiZ8sgxUVpz2uF8WTFN7FheiA5XzuoWP+xOubJCFNefruBbZn/h55M1wZ8KxNzqh/k4psyo0wrhYsxHD6dcsANVY+r09LqnKeXrn/fxQnZ28RTgjZ557VdTBnU8ia6b4uxmdayDBsIvkbxFTqnOdXm3D4KD2xnCZEvNqcTkIvWKDBoKh64TOHcBcRNCFa1Afc+AN5AGduuFsB/WYL/fdEaFwInqBOGsnegF43ISrZ3cX6W7ib6XYCmVWRwJfD/IY9D9T/cD8ywd95rzM83b7DutypsLsF3kmuBLLx//yKSG8SO5KyVvWyRpEETOm+f6j3uZg19rz3AXa4eGnL5qePEoE62Nm96XMp/JEIVpFUbZtP2oXY7OsSr63FyuWdk/rcW/ZfLljOmL+esYCJ4JDTW+o6s0CXop6tyw+WmlrFY5h5OplTG+39CVn30vg9suJdcQGbb87+kj8C3ZiENykghA49g29QzZA4gwszK0vDKVQP3Yz8tXVX62APdOp052kUI1LSBnK778W0+gEP/KR0jdAGl5U1SMtRRv1TcXy2ti2creCyOgtnjgs21rrdwf9KXYNnguK5KHqipz2OZaMBlUCMl7SgtOWAEAV8Ir2eD7zmhjeCj/LeMnixHuPmCaB3BkfD5mcyXsnqtC3/bfDMPGWnJqe5w4Kztgr6uka4fJBhjy1XkaX6QKY0nJiIM7fyTkQoog7rB9BNn/qao1ykbB3+s1m/cnc067nlTKEn8uP/8L95P4FLpFbZdTsXJhT2HWSCwhFVjBbFTRTUqO5JRGp5QmXIebT8qZHn4DeZ/CkpZ/8/1PfH0L4r/Dg4AFFTGqwr8Ve9iu2g6/Nnpcqf/1uP5SR/IhUpCia1Ma8Q4yp963h74ssUbFPT9FjX3BtdlSSJpv27lBWD4I1MDWQteliRFEeas9Fh6wuHGQ+5ly0UUoJIoWI/OtfQ+hyCIIHdAACwnBXpw8/3QhX3kijBwSICWOJYjxe9SxVn7wR3D5997ocxiW5Re11BiAWUTEBKTyoWpUMeEINsXQWBo14EaSZ3Okd1AAA">
     <h1 style="font-size:20px">لوحة تحكم Petya</h1>
     <p style="color:var(--dim);margin-top:8px;font-size:14px">للمالك فقط. سجّل الدخول بحساب Google الخاص بك.</p>
     <button class="btn" id="gBtn">الدخول بحساب Google</button>
@@ -105,7 +122,7 @@ main{padding:24px;max-width:1240px;margin:auto}
 
 <div id="app" class="hide">
   <header>
-    <div class="brand"><div class="logo">P</div><span>لوحة التحكم</span><span class="pill" id="pill"><span class="dot"></span>مباشر</span></div>
+    <div class="brand"><img class="logo" alt="Petya" src="data:image/webp;base64,UklGRoAFAABXRUJQVlA4IHQFAACwHwCdASpwAHAAPikUiEMhoSESSkxIGAKEoAvYu5SV/S/kN+zPxcWJ/FfgL9wur8R1yA/FX+gbyX/ad0V+sn+M9v/pAP1V6wD0APLC/2/+A+DP9mP119mW8Q5XbH1ZwDFnPxy1IvUk/7v04v5L7cvbp8df8X+5/AP/Jv51/lv6r7OXUUfowJ+pX9XFfidQcTED+R/Vj1b/Vw2sznqP/VVhavpiUqul6L+2hlP7YABRfJisMqJM6+nwBczGjJ8MuIArAYgtS0HLi9pEZ1Q56zQpgHUP2UbiPflOKvgqFPnCOtvNQ8Le52XzyN/2elWI3U8d3Dm8Vg6w1/HfqDZ//+pYv////88AAPg5ovfAbkQNv/njmf/6mhPi8Yatj//fME/4WjxkeNKvqlThblCXI++IrCRtsX4+e+Xg5gbop0x7nIr3m62WgyqHelRPGM8C7cj/QfFn9wObJkkuCN4AerwzBhYje2G0bPc5wTkuU5gUtjr9Ap9CS3o7rNH+19C1hDujrs/fSIeECWmvL1kulmOrZ+yZlBeacyeS0ZxREUb9sqyEjRQ4pLytgt1iIXO9vbzZo+tQbW+1Yyree0cVB486mNdOdu2XxARTZBGXS6KxSRZT6GQCyWM8mXpS6W8096f//PwmekQyOxDGbW7jZfkxkD5s8s1DbqX737/2PEklJiNgtWYeeyu0jT/+XCjDdEfWzngtFbo/nkpfjEPf8vioEhTvBZhmGdw+yLVC9hwBx6Vg64woyHB9cPCsWV153sM68EC4oPn3g+mZDBFQYhul/4tPPzbYjqj5I+l3LiZ8sgxUVpz2uF8WTFN7FheiA5XzuoWP+xOubJCFNefruBbZn/h55M1wZ8KxNzqh/k4psyo0wrhYsxHD6dcsANVY+r09LqnKeXrn/fxQnZ28RTgjZ557VdTBnU8ia6b4uxmdayDBsIvkbxFTqnOdXm3D4KD2xnCZEvNqcTkIvWKDBoKh64TOHcBcRNCFa1Afc+AN5AGduuFsB/WYL/fdEaFwInqBOGsnegF43ISrZ3cX6W7ib6XYCmVWRwJfD/IY9D9T/cD8ywd95rzM83b7DutypsLsF3kmuBLLx//yKSG8SO5KyVvWyRpEETOm+f6j3uZg19rz3AXa4eGnL5qePEoE62Nm96XMp/JEIVpFUbZtP2oXY7OsSr63FyuWdk/rcW/ZfLljOmL+esYCJ4JDTW+o6s0CXop6tyw+WmlrFY5h5OplTG+39CVn30vg9suJdcQGbb87+kj8C3ZiENykghA49g29QzZA4gwszK0vDKVQP3Yz8tXVX62APdOp052kUI1LSBnK778W0+gEP/KR0jdAGl5U1SMtRRv1TcXy2ti2creCyOgtnjgs21rrdwf9KXYNnguK5KHqipz2OZaMBlUCMl7SgtOWAEAV8Ir2eD7zmhjeCj/LeMnixHuPmCaB3BkfD5mcyXsnqtC3/bfDMPGWnJqe5w4Kztgr6uka4fJBhjy1XkaX6QKY0nJiIM7fyTkQoog7rB9BNn/qao1ykbB3+s1m/cnc067nlTKEn8uP/8L95P4FLpFbZdTsXJhT2HWSCwhFVjBbFTRTUqO5JRGp5QmXIebT8qZHn4DeZ/CkpZ/8/1PfH0L4r/Dg4AFFTGqwr8Ve9iu2g6/Nnpcqf/1uP5SR/IhUpCia1Ma8Q4yp963h74ssUbFPT9FjX3BtdlSSJpv27lBWD4I1MDWQteliRFEeas9Fh6wuHGQ+5ly0UUoJIoWI/OtfQ+hyCIIHdAACwnBXpw8/3QhX3kijBwSICWOJYjxe9SxVn7wR3D5997ocxiW5Re11BiAWUTEBKTyoWpUMeEINsXQWBo14EaSZ3Okd1AAA"><span>لوحة التحكم</span><span class="pill" id="pill"><span class="dot"></span>مباشر</span></div>
     <div class="tools">
       <button class="chip" id="themeBtn" onclick="toggleTheme()"><svg class="ic i-moon"><use href="#i-moon"/></svg><svg class="ic i-sun"><use href="#i-sun"/></svg></button>
       <button class="chip" id="soundBtn"><svg class="ic"><use href="#i-bell"/></svg></button>
@@ -214,36 +231,48 @@ function start(){
   },e=>{ $('logins').innerHTML='<p class="empty">سجل الدخول غير مفعّل بعد.</p>'; }));
 }
 
+const NEXT={new:['pending','بدء المعالجة'],pending:['activated','تفعيل الطلب'],activated:['done','إكمال الطلب']};
+function ago(ts){ if(!ts||!ts.toDate) return ''; const m=Math.floor((Date.now()-ts.toDate())/60000); if(m<1) return 'الآن'; if(m<60) return 'منذ '+m+' د'; const h=Math.floor(m/60); if(h<24) return 'منذ '+h+' س'; return 'منذ '+Math.floor(h/24)+' يوم'; }
+const fld=(l,v)=>`<div class="fld"><small>${l}</small><span>${v}</span></div>`;
+function match(o,k){ const st=o.status||'new'; if(k==='all') return true; if(k==='report') return o.customerReport==='not_received'; if(k==='done') return ['done','completed','received'].includes(st); return st===k; }
 function renderOrders(){
-  $('chips').innerHTML=FILTERS.map(([k,l])=>`<button class="chip ${filter===k?'on':''}" data-f="${k}">${l}</button>`).join('');
+  $('chips').innerHTML=FILTERS.map(([k,l])=>`<button class="chip ${filter===k?'on':''}" data-f="${k}">${l} (${orders.filter(o=>match(o,k)).length})</button>`).join('');
   const q=$('q').value.trim().toLowerCase();
-  const list=orders.filter(o=>{
-    const st=o.status||'new';
-    if(filter==='report'&&o.customerReport!=='not_received') return false;
-    if(filter==='done'&&!['done','completed','received'].includes(st)) return false;
-    if(!['all','report','done'].includes(filter)&&st!==filter) return false;
-    return !q||[o.name,o.accountName,o.phone,o.product,o.id].some(v=>String(v||'').toLowerCase().includes(q));
-  });
+  const list=orders.filter(o=>match(o,filter)&&(!q||[o.name,o.accountName,o.phone,o.product,o.id].some(v=>String(v||'').toLowerCase().includes(q))));
   $('oCount').textContent=list.length+' / '+orders.length;
   $('orders').innerHTML=list.map(o=>{
-    const st=o.status||'new', rep=o.customerReport==='not_received';
-    return `<div class="card ${lastFresh&&lastFresh.includes(o.id)?'fresh':''}">
-      <div class="top"><b>#${esc(o.id.slice(0,6).toUpperCase())} · ${esc(o.product||'')}${o.duration?' ('+esc(o.duration)+')':''}</b>
-        <span><span class="tag ${esc(cls(st))}">${esc(LABEL[st]||st)}</span>${rep?' <span class="tag report">لم يستلم</span>':''}</span></div>
-      <div class="meta"><span>${I('user')}${esc(o.accountName||o.name||'—')}</span><span>${I('phone')}${esc(o.phone||'')}</span>${o.total?`<span>${I('cash')}${esc(o.total)} DA</span>`:''}<span>${I('clock')}${when(o.createdAt)}</span></div>
-      ${o.message?`<div class="meta">${I('msg')}${esc(o.message)}</div>`:''}
+    const st=o.status||'new', rep=o.customerReport==='not_received', nx=NEXT[st];
+    const nm=o.name||o.accountName||'—';
+    return `<div class="order st-${esc(cls(st))} ${lastFresh&&lastFresh.includes(o.id)?'fresh':''}">
+      <div class="oh">
+        <div><div class="pn">${esc(o.product||'')}${o.duration?' · '+esc(o.duration):''}</div>
+          <div class="on">#${esc(o.id.slice(0,6).toUpperCase())} · ${ago(o.createdAt)} · ${when(o.createdAt)}</div></div>
+        <div class="pr">${o.total?esc(o.total)+' DA':''}<span class="tag ${esc(cls(st))}">${esc(LABEL[st]||st)}</span></div>
+      </div>
+      ${rep?`<div class="alert">${I('alert')} العميل أبلغ: لم أستلم المنتج</div>`:''}
+      <div class="flds">
+        ${fld('العميل',esc(nm))}
+        ${fld('الهاتف','<bdi dir="ltr">'+esc(o.phone||'—')+'</bdi>')}
+        ${o.accountName&&o.accountName!==nm?fld('اسم الحساب',esc(o.accountName)):''}
+        ${o.accountEmail?fld('البريد','<bdi dir="ltr">'+esc(o.accountEmail)+'</bdi>'):''}
+      </div>
+      ${o.message?`<div class="note">${I('msg')} ${esc(o.message)}</div>`:''}
       <div class="acts">
         <a href="${esc(waLink(o.phone))}" target="_blank" rel="noopener">واتساب</a>
-        ${['pending','activated','done','cancelled'].filter(s=>s!==st).map(s=>`<button data-id="${esc(o.id)}" data-s="${s}">${LABEL[s]}</button>`).join('')}
+        ${nx?`<button class="go" data-id="${esc(o.id)}" data-s="${nx[0]}">${nx[1]}</button>`:''}
+        ${st!=='cancelled'&&st!=='done'?`<button class="no" data-id="${esc(o.id)}" data-s="cancelled">إلغاء</button>`:''}
+        <select data-id="${esc(o.id)}">${['new','pending','activated','done','cancelled'].map(k=>`<option value="${k}" ${(st===k||(k==='done'&&['completed','received'].includes(st)))?'selected':''}>${LABEL[k]}</option>`).join('')}</select>
       </div></div>`;
   }).join('')||'<p class="empty">لا توجد طلبات مطابقة.</p>';
 }
-$('orders').onclick=async e=>{
-  const b=e.target.closest('button[data-s]'); if(!b) return;
-  b.disabled=true;
-  try{ await db.collection('orders').doc(b.dataset.id).update({status:b.dataset.s,statusUpdatedAt:firebase.firestore.FieldValue.serverTimestamp()}); }
-  catch(err){ alert('تعذّر تغيير الحالة: '+err.code); b.disabled=false; }
-};
+async function setStatus(id,st,el){
+  if(st==='cancelled'&&!confirm('إلغاء هذا الطلب؟')){ renderOrders(); return; }
+  el.disabled=true;
+  try{ await db.collection('orders').doc(id).update({status:st,statusUpdatedAt:firebase.firestore.FieldValue.serverTimestamp()}); }
+  catch(err){ alert('تعذّر تغيير الحالة: '+err.code); el.disabled=false; renderOrders(); }
+}
+$('orders').onclick=e=>{ const b=e.target.closest('button[data-s]'); if(b) setStatus(b.dataset.id,b.dataset.s,b); };
+$('orders').onchange=e=>{ const x=e.target.closest('select[data-id]'); if(x) setStatus(x.dataset.id,x.value,x); };
 
 function stats(){
   const t=orders.filter(o=>isToday(o.createdAt));
