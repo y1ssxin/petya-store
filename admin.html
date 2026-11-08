@@ -117,7 +117,7 @@ function isToday(ts){ if(!ts||!ts.toDate) return false; const d=ts.toDate(), n=n
 function waLink(p){ let n=String(p||'').replace(/[^\d+]/g,''); if(n.startsWith('+')) n=n.slice(1); else if(n.startsWith('00')) n=n.slice(2); else if(n.startsWith('0')) n='213'+n.slice(1); return 'https://wa.me/'+n; }
 
 // --- auth + admin check ---
-$('gBtn').onclick=()=>auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e=>$('loginErr').textContent='تعذّر تسجيل الدخول: '+(e.code||''));
+$('gBtn').onclick=()=>{const gp=new firebase.auth.GoogleAuthProvider(); gp.setCustomParameters({prompt:'select_account'}); return auth.signInWithPopup(gp).catch(e=>{$('loginErr').textContent='تعذّر تسجيل الدخول: '+(e.code||'')})};
 $('outBtn').onclick=()=>auth.signOut();
 $('soundBtn').onclick=()=>{soundOn=!soundOn; $('soundBtn').textContent='🔔 الصوت: '+(soundOn?'مفعّل':'متوقف'); if(soundOn) beep();};
 
