@@ -3024,6 +3024,25 @@ body.light .ft-cat a:hover, body.light .ft-col a:hover{ color:var(--accent); }
 <meta name="apple-mobile-web-app-title" content="Petya Store">
 <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
 <link rel="stylesheet" href="ios-app.css">
+<style id="petya-nav-categories">
+/* petya-nav-categories: "التصنيفات" option inside the header's three-line menu */
+.menu-toggle{display:flex !important;align-items:center;justify-content:center;}
+.nav-links .nav-cat{list-style:none;}
+.nav-cat-btn{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:0;background:none;border:0;color:inherit;font:inherit;letter-spacing:inherit;text-align:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.nav-cat-btn svg{flex-shrink:0;transition:transform .2s ease;}
+.nav-cat-btn[aria-expanded="true"] svg{transform:rotate(180deg);}
+.nav-cat-list{display:flex;flex-direction:column;gap:2px;margin:8px 0 0;padding:0 14px 0 0;list-style:none;border-inline-start:2px solid var(--border-strong,rgba(255,255,255,.14));}
+.nav-cat-list[hidden]{display:none;}
+.nav-cat-list a{display:block;padding:8px 12px;font-size:.92em;font-weight:600;color:var(--text-dim);}
+@media (max-width:760px){
+  .nav-cat-btn{padding:10px 13px;font-weight:600;color:var(--text);}
+  .nav-cat-list{margin-top:4px;margin-inline-end:13px;}
+}
+@media (min-width:761px){
+  .nav-cat-btn{padding:10px 14px;border-radius:10px;}
+  .nav-cat-btn:hover{background:var(--hover-tint);}
+}
+</style>
 </head>
 <body id="top">
 <script>
@@ -3048,6 +3067,20 @@ body.light .ft-cat a:hover, body.light .ft-col a:hover{ color:var(--accent); }
     </a>
     <ul class="nav-links" id="navLinks" hidden>
       <li><a href="#products">المنتجات</a></li>
+      <!-- petya-nav-cat-start -->
+      <li class="nav-cat">
+        <button type="button" class="nav-cat-btn" id="navCatBtn" aria-expanded="false" aria-controls="navCatList"><span>التصنيفات</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <ul class="nav-cat-list" id="navCatList" hidden>
+          <li><a href="index.html?cat=all#products">الكل</a></li>
+          <li><a href="index.html?cat=ai#products">الذكاء الاصطناعي</a></li>
+          <li><a href="index.html?cat=streaming#products">بث ومشاهدة</a></li>
+          <li><a href="index.html?cat=design#products">تصميم</a></li>
+          <li><a href="index.html?cat=social#products">سوشيال ميديا</a></li>
+          <li><a href="index.html?cat=software#products">برمجيات</a></li>
+          <li><a href="index.html?cat=gaming#products">الألعاب</a></li>
+        </ul>
+      </li>
+      <!-- petya-nav-cat-end -->
       <li><a href="#why">مميزاتنا</a></li>
       <li><a href="#how">طريقة الطلب</a></li>
       <li><a href="#faq">الأسئلة الشائعة</a></li>
@@ -4672,5 +4705,35 @@ body.light .am-menu{box-shadow:0 24px 60px rgba(30,60,120,.2);}
 </script>
 
 <script src="ios-app.js" defer></script>
+<script id="petya-nav-categories-js">
+(function(){
+  var btn=document.getElementById('navCatBtn'),list=document.getElementById('navCatList');
+  if(!btn||!list)return;
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    var open=list.hidden;
+    list.hidden=!open;
+    btn.setAttribute('aria-expanded',String(open));
+  });
+  var bar=document.getElementById('categoryFilterBar');
+  if(!bar)return;                       /* only the home page has the filter bar */
+  function apply(cat){
+    var b=bar.querySelector('[data-filter="'+cat+'"]');
+    if(b){b.click();return true;}
+    return false;
+  }
+  list.addEventListener('click',function(e){
+    var a=e.target.closest('a'); if(!a)return;
+    var cat=new URL(a.getAttribute('href'),location.href).searchParams.get('cat');
+    if(apply(cat)){
+      e.preventDefault();
+      var d=document.getElementById('products'); if(d)d.scrollIntoView({behavior:'auto'});
+      history.replaceState(null,'','index.html#products');
+    }
+  });
+  var c=new URLSearchParams(location.search).get('cat');
+  if(c)apply(c);
+})();
+</script>
 </body>
 </html>
